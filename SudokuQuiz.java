@@ -13,6 +13,11 @@ public class SudokuQuiz {
         return board;
     }
 
+    /**
+     * A utility function to print the board
+     * 
+     * @param matrix
+     */
     public void dumpBoard() {
         dumpBoard(board);
     }
@@ -29,6 +34,13 @@ public class SudokuQuiz {
         System.out.println("-----+-----+-----+");
     }
 
+    /**
+     * Set values on the board.
+     * 
+     * @param row
+     * @param col
+     * @param value
+     */
     public boolean setValue(int row, int col, int value) {
         if (!isEditable(row, col)) {
             return false;
