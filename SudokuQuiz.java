@@ -1,16 +1,51 @@
+import java.util.Deque;
+import java.util.ArrayDeque;
+
 public class SudokuQuiz {
     private int size; // Game size.
     private int[][] quiz; // Sudoku quiz.
     private int[][] board; // Current sudoku board.
 
+    /**
+     * Class for operation history.
+     */
+    public class Operation {
+        private int row;
+        private int col;
+        private int oldValue;
+        private int newValue;
+
+        Operation(int row, int col, int oldValue, int newValue) {
+            this.row = row;
+            this.col = col;
+            this.oldValue = oldValue;
+            this.newValue = newValue;
+        }
+
+        public int getRow() {
+            return row;
+        }
+
+        public int getCol() {
+            return col;
+        }
+
+        public int getOldValue() {
+            return oldValue;
+        }
+
+        public int getNewValue() {
+            return newValue;
+        }
+    }
+
+    private Deque<Operation> operations; // List of operations.
+
     public SudokuQuiz(int size) {
         this.size = size;
         quiz = new int[size * 3][size * 3];
         board = new int[size * 3][size * 3];
-    }
-
-    public int[][] getBoard() {
-        return board;
+        operations = new ArrayDeque<>();
     }
 
     /**
@@ -35,7 +70,7 @@ public class SudokuQuiz {
     }
 
     /**
-     * Set values on the board.
+     * Set value on the board.
      * 
      * @param row
      * @param col
@@ -46,8 +81,32 @@ public class SudokuQuiz {
             return false;
         }
         boolean possible = isPossible(row, col, value);
+        operations.add(new Operation(row, col, board[row][col], value));
         board[row][col] = value;
         return possible;
+    }
+
+    /**
+     * Get value of board.
+     * 
+     * @param row
+     * @param col
+     * @return
+     */
+    public int getValue(int row, int col) {
+        return board[row][col];
+    }
+
+    /**
+     * Undo the last operation.
+     */
+    public Operation undo() {
+        if (operations.isEmpty()) {
+            return null;
+        }
+        Operation operation = operations.removeLast();
+        board[operation.row][operation.col] = operation.oldValue;
+        return operation;
     }
 
     /**
@@ -119,6 +178,7 @@ public class SudokuQuiz {
                 board[row][col] = quiz[row][col];
             }
         }
+        operations.clear();
     }
 
     /**
@@ -170,6 +230,7 @@ public class SudokuQuiz {
                 board[row][col] = quiz[row][col];
             }
         }
+        operations.clear();
     }
 
     /**
@@ -205,7 +266,11 @@ public class SudokuQuiz {
      * @return true: solved, false: cannot solve.
      */
     public boolean solve() {
-        return solve(board);
+        boolean solved = solve(board);
+        if (solved) {
+            operations.clear();
+        }
+        return solved;
     }
 
     public boolean solve(int[][] matrix) {

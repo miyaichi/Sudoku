@@ -40,7 +40,8 @@ public class Sudoku {
                 " 4. hint <row> <col>\n" +
                 " 5. set <row> <col> <value>\n" +
                 " 6. hint <row> <col>\n" +
-                " 7. quit\n";
+                " 7. undo\n" +
+                " 8. quit\n";
 
         SudokuQuiz quiz = new SudokuQuiz(3);
         quiz.newQuiz();
@@ -93,6 +94,15 @@ public class Sudoku {
                         }
                     } catch (Exception e) {
                         System.out.println("Usage: set <row> <col> <value>");
+                    }
+                    break;
+                case "undo":
+                    SudokuQuiz.Operation operation = quiz.undo();
+                    if (operation == null) {
+                        System.out.println("No more undo");
+                    } else {
+                        System.out.println("Undo " + operation.getRow() + " " + operation.getCol() + " "
+                                + operation.getNewValue());
                     }
                     break;
                 case "quit":

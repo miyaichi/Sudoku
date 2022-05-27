@@ -1,6 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,15 +13,15 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 public class SudokuBoard {
-
     private static final int SIZE = 3; // Size of the game.
-    SudokuQuiz quiz = new SudokuQuiz(SIZE);
+    private SudokuQuiz quiz = new SudokuQuiz(SIZE);
 
     private final JFrame frame;
     private Cell[][] cells;
     private Cell selectedCell = null;
     private Color selectedColor = new Color(109, 204, 218); // light blue
     private Color defaultColor = Color.WHITE;
+    private Color quizColor = Color.BLACK;
     private Color validColor = Color.BLUE;
     private Color invalidColor = Color.RED;
 
@@ -28,23 +29,25 @@ public class SudokuBoard {
         frame = new JFrame("Sudoku");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
+        frame.setResizable(false);
 
-        buildBoard();
+        buildFrame();
 
         quiz.newQuiz();
-        setBoard(quiz.getBoard());
+        updateBoard(quiz);
 
         frame.pack();
         frame.setVisible(true);
     }
 
-    void buildBoard() {
+    void buildFrame() {
         final int GAP = 2; // Gaps between boardPanels.
 
         JPanel commandPanel = new JPanel();
         CommandPanelListener commandPanelListener = new CommandPanelListener();
-        for (String s : new String[] { "New", "Hint", "Solve", "Reset", "Del" }) {
+        for (String s : new String[] { "New", "Hint", "Solve", "Reset", "Undo" }) {
             JButton button = new JButton(s);
+            button.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 12));
             button.addActionListener(commandPanelListener);
             commandPanel.add(button);
         }
@@ -87,33 +90,30 @@ public class SudokuBoard {
             JButton button = new JButton(String.valueOf(i));
             button.addActionListener(numberPanelListener);
             button.setPreferredSize(dimension);
+            button.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 10));
             numberPanel.add(button);
         }
     }
 
-    public void setBoard(int[][] board) {
-        for (int row = 0; row < board.length; row++) {
-            for (int col = 0; col < board[row].length; col++) {
+    /**
+     * Updates the board with the current state of the quiz.
+     *
+     * @param quiz
+     */
+    public void updateBoard(SudokuQuiz quiz) {
+        for (int row = 0; row < cells.length; row++) {
+            for (int col = 0; col < cells[row].length; col++) {
                 Cell cell = cells[row][col];
-                int value = board[row][col];
-                cell.setValue(value, Color.BLACK);
-                if (value == 0) {
+                int value = quiz.getValue(row, col);
+                if (quiz.isEditable(row, col)) {
+                    cell.setValue(value, quiz.isPossible(row, col, value) ? validColor : invalidColor);
                     cell.setEnabled(true);
                     cell.setBackground(Color.WHITE);
                 } else {
+                    cell.setValue(value, quizColor);
                     cell.setEnabled(false);
                     cell.setBackground(Color.LIGHT_GRAY);
                 }
-            }
-        }
-    }
-
-    public void updateBoard(int[][] board) {
-        for (int row = 0; row < board.length; row++) {
-            for (int col = 0; col < board[row].length; col++) {
-                Cell cell = cells[row][col];
-                int value = board[row][col];
-                cell.setValue(value, Color.BLACK);
             }
         }
     }
@@ -132,6 +132,7 @@ public class SudokuBoard {
             setHorizontalAlignment(SwingConstants.CENTER);
             setBorder(BorderFactory.createLineBorder(Color.GRAY));
             setPreferredSize(dimension);
+            setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
             setOpaque(true);
         }
 
@@ -152,8 +153,19 @@ public class SudokuBoard {
             setForeground(color);
             setText(this.value == 0 ? "" : String.valueOf(this.value));
         }
+
+        public void select() {
+            setBackground(selectedColor);
+        }
+
+        public void deselect() {
+            setBackground(defaultColor);
+        }
     }
 
+    /**
+     * ActionListener for the command buttons.
+     */
     public class CommandPanelListener implements ActionListener {
         /**
          * Executes the command of the button.
@@ -163,7 +175,7 @@ public class SudokuBoard {
             String command = e.getActionCommand();
             if (command.equals("New")) {
                 quiz.newQuiz();
-                setBoard(quiz.getBoard());
+                updateBoard(quiz);
             } else if (command.equals("Hint")) {
                 if (selectedCell == null) {
                     JOptionPane.showMessageDialog(frame, "Select a cell first.");
@@ -178,23 +190,37 @@ public class SudokuBoard {
                 }
             } else if (command.equals("Solve")) {
                 if (quiz.solve()) {
-                    updateBoard(quiz.getBoard());
+                    updateBoard(quiz);
                 } else {
                     JOptionPane.showMessageDialog(frame, "No solution found.");
                 }
             } else if (command.equals("Reset")) {
                 quiz.resetQuiz();
-                setBoard(quiz.getBoard());
-            } else if (command.equals("Del")) {
-                if (selectedCell == null) {
-                    JOptionPane.showMessageDialog(frame, "Select a cell first.");
-                } else {
-                    selectedCell.setValue(0, validColor);
+                updateBoard(quiz);
+            } else if (command.equals("Undo")) {
+                SudokuQuiz.Operation operation = quiz.undo();
+                if (operation != null) {
+                    if (selectedCell != null) {
+                        selectedCell.deselect();
+                        selectedCell = null;
+                    }
+                    int row = operation.getRow();
+                    int col = operation.getCol();
+                    Cell cell = cells[row][col];
+                    cell.setValue(operation.getOldValue(),
+                            quiz.isPossible(row, col, operation.getOldValue())
+                                    ? validColor
+                                    : invalidColor);
+                    cell.select();
+                    selectedCell = cell;
                 }
             }
         }
     }
 
+    /**
+     * Action listener for the cells.
+     */
     public class BoardPanelListener implements ActionListener {
         /**
          * Select cell to set value.
@@ -202,14 +228,17 @@ public class SudokuBoard {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (selectedCell != null) {
-                selectedCell.setBackground(defaultColor);
+                selectedCell.deselect();
             }
             Cell cell = (Cell) e.getSource();
-            cell.setBackground(selectedColor);
+            cell.select();
             selectedCell = cell;
         }
     }
 
+    /**
+     * Action listener for the number buttons.
+     */
     public class NumberPanelListener implements ActionListener {
         /**
          * If cell is selected, set the value of the cell to the number.
