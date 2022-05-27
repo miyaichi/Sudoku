@@ -155,13 +155,9 @@ public class SudokuQuiz {
      * @return true: solved, false: there are blank cells.
      */
     public boolean isSolved() {
-        return isSolved(board);
-    }
-
-    public boolean isSolved(int[][] matrix) {
-        for (int row = 0; row < matrix.length; row++) {
-            for (int col = 0; col < matrix[row].length; col++) {
-                if (matrix[row][col] == 0) {
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col < board[row].length; col++) {
+                if (board[row][col] == 0) {
                     return false;
                 }
             }

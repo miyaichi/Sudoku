@@ -38,7 +38,8 @@ Available commands:
  4. hint <row> <col>
  5. set <row> <col> <value>
  6. hint <row> <col>
- 7. quit
+ 7. undo
+ 8. quit
 ```
 
 2. swing mode
