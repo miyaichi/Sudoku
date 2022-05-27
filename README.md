@@ -37,9 +37,8 @@ Available commands:
  3. solve
  4. hint <row> <col>
  5. set <row> <col> <value>
- 6. hint <row> <col>
- 7. undo
- 8. quit
+ 6. undo
+ 7. quit
 ```
 
 2. swing mode

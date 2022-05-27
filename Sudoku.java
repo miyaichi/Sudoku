@@ -39,9 +39,8 @@ public class Sudoku {
                 " 3. solve\n" +
                 " 4. hint <row> <col>\n" +
                 " 5. set <row> <col> <value>\n" +
-                " 6. hint <row> <col>\n" +
-                " 7. undo\n" +
-                " 8. quit\n";
+                " 6. undo\n" +
+                " 7. quit\n";
 
         SudokuQuiz quiz = new SudokuQuiz(3);
         quiz.newQuiz();
