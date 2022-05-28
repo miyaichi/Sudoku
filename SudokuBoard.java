@@ -34,7 +34,7 @@ public class SudokuBoard {
         buildFrame();
 
         quiz.newQuiz();
-        updateBoard(quiz);
+        updateBoard();
 
         frame.pack();
         frame.setVisible(true);
@@ -44,6 +44,8 @@ public class SudokuBoard {
         final int GAP = 2; // Gaps between boardPanels.
 
         JPanel commandPanel = new JPanel();
+        frame.add(commandPanel, BorderLayout.NORTH);
+
         CommandPanelListener commandPanelListener = new CommandPanelListener();
         for (String s : new String[] { "New", "Hint", "Solve", "Reset", "Undo" }) {
             JButton button = new JButton(s);
@@ -51,7 +53,6 @@ public class SudokuBoard {
             button.addActionListener(commandPanelListener);
             commandPanel.add(button);
         }
-        frame.add(commandPanel, BorderLayout.NORTH);
 
         JPanel boardPanel = new JPanel();
         boardPanel.setLayout(new GridLayout(SIZE, SIZE, GAP, GAP));
@@ -98,9 +99,8 @@ public class SudokuBoard {
     /**
      * Updates the board with the current state of the quiz.
      *
-     * @param quiz
      */
-    public void updateBoard(SudokuQuiz quiz) {
+    public void updateBoard() {
         for (int row = 0; row < cells.length; row++) {
             for (int col = 0; col < cells[row].length; col++) {
                 Cell cell = cells[row][col];
@@ -175,7 +175,7 @@ public class SudokuBoard {
             String command = e.getActionCommand();
             if (command.equals("New")) {
                 quiz.newQuiz();
-                updateBoard(quiz);
+                updateBoard();
             } else if (command.equals("Hint")) {
                 if (selectedCell == null) {
                     JOptionPane.showMessageDialog(frame, "Select a cell first.");
@@ -190,13 +190,13 @@ public class SudokuBoard {
                 }
             } else if (command.equals("Solve")) {
                 if (quiz.solve()) {
-                    updateBoard(quiz);
+                    updateBoard();
                 } else {
                     JOptionPane.showMessageDialog(frame, "No solution found.");
                 }
             } else if (command.equals("Reset")) {
                 quiz.resetQuiz();
-                updateBoard(quiz);
+                updateBoard();
             } else if (command.equals("Undo")) {
                 SudokuQuiz.Operation operation = quiz.undo();
                 if (operation != null) {
