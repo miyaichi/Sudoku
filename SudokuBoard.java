@@ -106,7 +106,7 @@ public class SudokuBoard {
                 Cell cell = cells[row][col];
                 int value = quiz.getValue(row, col);
                 if (quiz.isEditable(row, col)) {
-                    cell.setValue(value, quiz.isPossible(row, col, value) ? validColor : invalidColor);
+                    cell.setValue(value, validColor);
                     cell.setEnabled(true);
                     cell.setBackground(Color.WHITE);
                 } else {
