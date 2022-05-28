@@ -45,7 +45,7 @@ Available commands:
 
 2. GUI swing mode
 
-<img src=”./SudokuScreen.png" width="50%">
+![](./SudokuScreen.png | width=100)
 
 ## Usage:
 
