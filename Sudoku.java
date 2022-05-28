@@ -88,6 +88,9 @@ public class Sudoku {
                         if (quiz.isEditable(row, col)) {
                             boolean valid = quiz.setValue(row, col, value);
                             System.out.println("Set " + row + " " + col + " " + value + " returns " + valid);
+                            if (valid && quiz.isSolved()) {
+                                System.out.println("Solved!");
+                            }
                         } else {
                             System.out.println("row = " + row + " col = " + col + " is not editable");
                         }
