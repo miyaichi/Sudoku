@@ -1,5 +1,5 @@
-import java.util.Deque;
 import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class SudokuQuiz {
     private int size; // Game size.
