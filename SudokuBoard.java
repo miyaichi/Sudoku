@@ -98,7 +98,6 @@ public class SudokuBoard {
 
     /**
      * Updates the board with the current state of the quiz.
-     *
      */
     public void updateBoard() {
         for (int row = 0; row < cells.length; row++) {
