@@ -57,15 +57,17 @@ public class SudokuQuiz {
     }
 
     public void dumpBoard(int[][] matrix) {
-        System.out.println("-----+-----+-----+");
+        System.out.println("-------------------");
+        System.out.println("  0 1 2 3 4 5 6 7 8");
         for (int row = 0; row < matrix.length; row++) {
+            System.out.print(row + " ");
             for (int col = 0; col < matrix[row].length; col++) {
                 int value = matrix[row][col];
                 System.out.print((value == 0 ? "." : value) + " ");
             }
             System.out.println();
         }
-        System.out.println("-----+-----+-----+");
+        System.out.println("-------------------");
     }
 
     /**
@@ -190,7 +192,7 @@ public class SudokuQuiz {
                 }
             }
 
-            // Generate sloable quiz
+            // Generate solvable quiz
             row = (int) (Math.random() * size * 3);
             col = (int) (Math.random() * size * 3);
             quiz[row][col] = (int) (Math.random() * 9 + 1);
@@ -199,15 +201,14 @@ public class SudokuQuiz {
             }
 
             // Blank cells at random
-            for (int i = 0; i < 52; i++) {
-                while (true) {
-                    row = (int) (Math.random() * size * 3);
-                    col = (int) (Math.random() * size * 3);
-                    if (quiz[row][col] != 0) {
-                        break;
-                    }
+            int c = 54;
+            while (c > 0) {
+                row = (int) (Math.random() * size * 3);
+                col = (int) (Math.random() * size * 3);
+                if (quiz[row][col] != 0) {
+                    quiz[row][col] = 0;
+                    c--;
                 }
-                quiz[row][col] = 0;
             }
 
             // Check if the quiz is solvable.
@@ -236,15 +237,11 @@ public class SudokuQuiz {
      * @return value
      */
     public int getHint(int row, int col) {
-        return getHint(board, row, col);
-    }
-
-    public int getHint(int[][] matrix, int row, int col) {
         for (int value = 1; value <= 9; value++) {
-            if (isPossible(matrix, row, col, value)) {
-                int[][] temp = new int[matrix.length][];
-                for (int i = 0; i < matrix.length; i++) {
-                    temp[i] = matrix[i].clone();
+            if (isPossible(board, row, col, value)) {
+                int[][] temp = new int[board.length][];
+                for (int i = 0; i < board.length; i++) {
+                    temp[i] = board[i].clone();
                 }
                 temp[row][col] = value;
                 if (solve(temp)) {

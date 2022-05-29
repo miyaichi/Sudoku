@@ -20,8 +20,6 @@ public class SudokuBoard {
     private Cell[][] cells;
     private Cell selectedCell = null;
     private Color selectedColor = new Color(109, 204, 218); // light blue
-    private Color defaultColor = Color.WHITE;
-    private Color quizColor = Color.BLACK;
     private Color validColor = Color.BLUE;
     private Color invalidColor = Color.RED;
 
@@ -109,9 +107,9 @@ public class SudokuBoard {
                     cell.setEnabled(true);
                     cell.setBackground(Color.WHITE);
                 } else {
-                    cell.setValue(value, quizColor);
+                    cell.setValue(value, Color.BLACK);
                     cell.setEnabled(false);
-                    cell.setBackground(Color.LIGHT_GRAY);
+                    // cell.setBackground(Color.LIGHT_GRAY);
                 }
             }
         }
@@ -127,7 +125,7 @@ public class SudokuBoard {
             this.col = col;
             this.value = 0;
 
-            setBackground(defaultColor);
+            setBackground(Color.WHITE);
             setHorizontalAlignment(SwingConstants.CENTER);
             setBorder(BorderFactory.createLineBorder(Color.GRAY));
             setPreferredSize(dimension);
@@ -158,7 +156,7 @@ public class SudokuBoard {
         }
 
         public void deselect() {
-            setBackground(defaultColor);
+            setBackground(Color.WHITE);
         }
     }
 
@@ -180,11 +178,11 @@ public class SudokuBoard {
                     JOptionPane.showMessageDialog(frame, "Select a cell first.");
                 } else {
                     int value = quiz.getHint(selectedCell.getRow(), selectedCell.getCol());
-                    if (value == 0) {
-                        JOptionPane.showMessageDialog(frame, "No hint available.");
-                    } else {
+                    if (value != 0) {
                         quiz.setValue(selectedCell.getRow(), selectedCell.getCol(), value);
                         selectedCell.setValue(value, validColor);
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "No hint available.");
                     }
                 }
             } else if (command.equals("Solve")) {
