@@ -5,39 +5,6 @@ public class SudokuQuiz {
     private int size; // Game size.
     private int[][] quiz; // Sudoku quiz.
     private int[][] board; // Current sudoku board.
-
-    /**
-     * Class for operation history.
-     */
-    public class Operation {
-        private int row, col; // row and column of cell.
-        private int oldValue; // old value of cell.
-        private int newValue; // new value of cell.
-
-        Operation(int row, int col, int oldValue, int newValue) {
-            this.row = row;
-            this.col = col;
-            this.oldValue = oldValue;
-            this.newValue = newValue;
-        }
-
-        public int getRow() {
-            return row;
-        }
-
-        public int getCol() {
-            return col;
-        }
-
-        public int getOldValue() {
-            return oldValue;
-        }
-
-        public int getNewValue() {
-            return newValue;
-        }
-    }
-
     private Deque<Operation> operations; // List of operations.
 
     public SudokuQuiz(int size) {
@@ -283,5 +250,37 @@ public class SudokuQuiz {
             }
         }
         return true;
+    }
+
+    /**
+     * Class for operation history.
+     */
+    public class Operation {
+        private int row, col; // row and column of cell.
+        private int oldValue; // old value of cell.
+        private int newValue; // new value of cell.
+
+        Operation(int row, int col, int oldValue, int newValue) {
+            this.row = row;
+            this.col = col;
+            this.oldValue = oldValue;
+            this.newValue = newValue;
+        }
+
+        public int getRow() {
+            return row;
+        }
+
+        public int getCol() {
+            return col;
+        }
+
+        public int getOldValue() {
+            return oldValue;
+        }
+
+        public int getNewValue() {
+            return newValue;
+        }
     }
 }
