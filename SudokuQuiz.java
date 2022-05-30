@@ -2,6 +2,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class SudokuQuiz {
+    private int level = 6; // Game level. (1 .. 7)
     private int size; // Game size.
     private int[][] quiz; // Sudoku quiz.
     private int[][] board; // Current sudoku board.
@@ -152,14 +153,14 @@ public class SudokuQuiz {
         while (true) {
             int row, col;
 
-            // Clear quiz
+            // Clear quiz.
             for (row = 0; row < quiz.length; row++) {
                 for (col = 0; col < quiz[row].length; col++) {
                     quiz[row][col] = 0;
                 }
             }
 
-            // Generate solvable quiz
+            // Generate solvable quiz.
             row = (int) (Math.random() * size * 3);
             col = (int) (Math.random() * size * 3);
             quiz[row][col] = (int) (Math.random() * 9 + 1);
@@ -167,14 +168,17 @@ public class SudokuQuiz {
                 continue;
             }
 
-            // Blank cells at random
-            int c = 54;
-            while (c > 0) {
-                row = (int) (Math.random() * size * 3);
-                col = (int) (Math.random() * size * 3);
-                if (quiz[row][col] != 0) {
-                    quiz[row][col] = 0;
-                    c--;
+            // Erase cells block by block.
+            for (int l = level; l > 0; l--) {
+                for (int b = 0; b < size * size; b++) {
+                    while (true) {
+                        row = (int) (b / size * 3 + Math.random() * size);
+                        col = (int) (b % size * 3 + Math.random() * size);
+                        if (quiz[row][col] != 0) {
+                            quiz[row][col] = 0;
+                            break;
+                        }
+                    }
                 }
             }
 
@@ -220,7 +224,7 @@ public class SudokuQuiz {
     }
 
     /**
-     * Solve the board.
+     * Solve the board with backtracking.
      * 
      * @return true: solved, false: cannot solve.
      */
