@@ -39,6 +39,15 @@ public class SudokuQuiz {
     }
 
     /**
+     * Get current board.
+     * 
+     * @return board
+     */
+    public int[][] getBoard() {
+        return board;
+    }
+
+    /**
      * Set value on the board.
      * 
      * @param row
@@ -260,31 +269,15 @@ public class SudokuQuiz {
      * Class for operation history.
      */
     public class Operation {
-        private int row, col; // row and column of cell.
-        private int oldValue; // old value of cell.
-        private int newValue; // new value of cell.
+        public int row, col; // row and column of cell.
+        public int oldValue; // old value of cell.
+        public int newValue; // new value of cell.
 
         Operation(int row, int col, int oldValue, int newValue) {
             this.row = row;
             this.col = col;
             this.oldValue = oldValue;
             this.newValue = newValue;
-        }
-
-        public int getRow() {
-            return row;
-        }
-
-        public int getCol() {
-            return col;
-        }
-
-        public int getOldValue() {
-            return oldValue;
-        }
-
-        public int getNewValue() {
-            return newValue;
         }
     }
 }

@@ -104,8 +104,8 @@ public class Sudoku {
                     if (operation == null) {
                         System.out.println("No more undo");
                     } else {
-                        System.out.println("Undo " + operation.getRow() + " " + operation.getCol() + " "
-                                + operation.getNewValue());
+                        System.out.println("Undo " + operation.row + " " + operation.col + " "
+                                + operation.newValue);
                     }
                     break;
                 case "quit":

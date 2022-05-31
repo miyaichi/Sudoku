@@ -205,11 +205,9 @@ public class SudokuBoard {
                         selectedCell.deselect();
                         selectedCell = null;
                     }
-                    int row = operation.getRow();
-                    int col = operation.getCol();
-                    Cell cell = cells[row][col];
-                    cell.setValue(operation.getOldValue(),
-                            quiz.isPossible(row, col, operation.getOldValue())
+                    Cell cell = cells[operation.row][operation.col];
+                    cell.setValue(operation.oldValue,
+                            quiz.isPossible(operation.row, operation.col, operation.oldValue)
                                     ? validValueColor
                                     : invalidValueColor);
                     cell.select();
