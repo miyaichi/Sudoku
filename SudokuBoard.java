@@ -19,9 +19,14 @@ public class SudokuBoard {
     private final JFrame frame;
     private Cell[][] cells;
     private Cell selectedCell = null;
-    private Color selectedColor = new Color(109, 204, 218); // light blue
-    private Color validColor = Color.BLUE;
-    private Color invalidColor = Color.RED;
+
+    private Color selectedCellColor = new Color(137, 189, 222); // Sky Blue
+    private Color fixedCellColor = new Color(163, 185, 224); // Day dream
+    private Color editableCellColor = new Color(253, 246, 219); // Pale white lily
+
+    private Color fixedValueColor = Color.BLACK;
+    private Color validValueColor = Color.BLUE;
+    private Color invalidValueColor = Color.RED;
 
     public SudokuBoard() {
         frame = new JFrame("Sudoku");
@@ -39,7 +44,7 @@ public class SudokuBoard {
     }
 
     void buildFrame() {
-        final int GAP = 2; // Gaps between boardPanels.
+        final int GAP = 4; // Gaps between boardPanels.
 
         JPanel commandPanel = new JPanel();
         frame.add(commandPanel, BorderLayout.NORTH);
@@ -103,13 +108,13 @@ public class SudokuBoard {
                 Cell cell = cells[row][col];
                 int value = quiz.getValue(row, col);
                 if (quiz.isEditable(row, col)) {
-                    cell.setValue(value, validColor);
+                    cell.setValue(value, validValueColor);
                     cell.setEnabled(true);
-                    cell.setBackground(Color.WHITE);
+                    cell.setBackground(editableCellColor);
                 } else {
-                    cell.setValue(value, Color.BLACK);
+                    cell.setValue(value, fixedValueColor);
                     cell.setEnabled(false);
-                    // cell.setBackground(Color.LIGHT_GRAY);
+                    cell.setBackground(fixedCellColor);
                 }
             }
         }
@@ -125,7 +130,6 @@ public class SudokuBoard {
             this.col = col;
             this.value = 0;
 
-            setBackground(Color.WHITE);
             setHorizontalAlignment(SwingConstants.CENTER);
             setBorder(BorderFactory.createLineBorder(Color.GRAY));
             setPreferredSize(dimension);
@@ -152,11 +156,11 @@ public class SudokuBoard {
         }
 
         public void select() {
-            setBackground(selectedColor);
+            setBackground(selectedCellColor);
         }
 
         public void deselect() {
-            setBackground(Color.WHITE);
+            setBackground(editableCellColor);
         }
     }
 
@@ -180,7 +184,7 @@ public class SudokuBoard {
                     int value = quiz.getHint(selectedCell.getRow(), selectedCell.getCol());
                     if (value != 0) {
                         quiz.setValue(selectedCell.getRow(), selectedCell.getCol(), value);
-                        selectedCell.setValue(value, validColor);
+                        selectedCell.setValue(value, validValueColor);
                     } else {
                         JOptionPane.showMessageDialog(frame, "No hint available.");
                     }
@@ -206,8 +210,8 @@ public class SudokuBoard {
                     Cell cell = cells[row][col];
                     cell.setValue(operation.getOldValue(),
                             quiz.isPossible(row, col, operation.getOldValue())
-                                    ? validColor
-                                    : invalidColor);
+                                    ? validValueColor
+                                    : invalidValueColor);
                     cell.select();
                     selectedCell = cell;
                 }
@@ -246,7 +250,7 @@ public class SudokuBoard {
                 JButton button = (JButton) e.getSource();
                 int value = Integer.parseInt(button.getText());
                 boolean possible = quiz.setValue(selectedCell.getRow(), selectedCell.getCol(), value);
-                selectedCell.setValue(value, possible ? validColor : invalidColor);
+                selectedCell.setValue(value, possible ? validValueColor : invalidValueColor);
                 if (possible && quiz.isSolved()) {
                     JOptionPane.showMessageDialog(null, "Congratulations, you win!");
                 }
