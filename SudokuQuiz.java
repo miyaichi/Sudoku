@@ -269,9 +269,9 @@ public class SudokuQuiz {
      * Class for operation history.
      */
     public class Operation {
-        public int row, col; // row and column of cell.
-        public int oldValue; // old value of cell.
-        public int newValue; // new value of cell.
+        public final int row, col; // row and column of cell.
+        public final int oldValue; // old value of cell.
+        public final int newValue; // new value of cell.
 
         Operation(int row, int col, int oldValue, int newValue) {
             this.row = row;
