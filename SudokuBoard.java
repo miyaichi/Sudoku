@@ -13,8 +13,9 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 public class SudokuBoard {
-    private static final int SIZE = 3; // Size of the game.
-    private SudokuQuiz quiz = new SudokuQuiz(SIZE);
+    private static final int LEVEL = 6; // Quiz level. (1 .. 7)
+    private static final int SIZE = 3; // Size of the quiz.
+    private SudokuQuiz quiz = new SudokuQuiz(SIZE, LEVEL);
 
     private final JFrame frame;
     private Cell[][] cells;

@@ -32,7 +32,8 @@ public class Sudoku {
      * Sudoku repl mode.
      */
     static public void repl() {
-        final int SIZE = 3; // Size of the game.
+        final int LEVEL = 6; // Quiz level. (1 .. 7)
+        final int SIZE = 3; // Size of the quiz.
         final String PROMPT = "> ";
         final String help = "Available commands:\n" +
                 " 1. new\n" +
@@ -43,7 +44,7 @@ public class Sudoku {
                 " 6. undo\n" +
                 " 7. quit\n";
 
-        SudokuQuiz quiz = new SudokuQuiz(SIZE);
+        SudokuQuiz quiz = new SudokuQuiz(SIZE, LEVEL);
         quiz.newQuiz();
         while (true) {
             int row, col, value;

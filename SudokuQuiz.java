@@ -2,14 +2,15 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class SudokuQuiz {
-    private int level = 5; // Quiz level. (1 .. 7)
+    private int level; // Quiz level. (1 .. 7)
     private int size; // Quiz size.
     private int[][] quiz; // Sudoku quiz.
     private int[][] board; // Current sudoku board.
     private Deque<Operation> operations; // List of operations.
 
-    public SudokuQuiz(int size) {
+    public SudokuQuiz(int size, int level) {
         this.size = size;
+        this.level = level;
         quiz = new int[size * 3][size * 3];
         board = new int[size * 3][size * 3];
         operations = new ArrayDeque<>();
