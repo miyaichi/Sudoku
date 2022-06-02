@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 public class SudokuBoard {
-    private static final int LEVEL = 6; // Quiz level. (1 .. 7)
+    private static final int LEVEL = 5; // Quiz level. (1 .. 7)
     private static final int SIZE = 3; // Size of the quiz.
     private SudokuQuiz quiz = new SudokuQuiz(SIZE, LEVEL);
 
@@ -182,16 +182,24 @@ public class SudokuBoard {
                 quiz.newQuiz();
                 updateBoard();
             } else if (command.equals("Hint")) {
-                if (selectedCell == null) {
-                    JOptionPane.showMessageDialog(frame, "Select a cell first.");
+                SudokuSolver solver = new SudokuSolver(quiz.getBoard());
+                SudokuSolver.Hint[] hints = solver.getHints();
+                if (hints.length == 0) {
+                    JOptionPane.showMessageDialog(frame, "No hints available.");
                 } else {
-                    int value = quiz.getHint(selectedCell.getRow(), selectedCell.getCol());
-                    if (value != 0) {
-                        quiz.setValue(selectedCell.getRow(), selectedCell.getCol(), value);
-                        selectedCell.setValue(value, validValueColor);
-                    } else {
-                        JOptionPane.showMessageDialog(frame, "No hint available.");
+                    int row = hints[0].row;
+                    int col = hints[0].col;
+                    int value = hints[0].value;
+                    boolean possible = quiz.setValue(row, col, value);
+
+                    if (selectedCell != null) {
+                        selectedCell.deselect();
+                        selectedCell = null;
                     }
+                    Cell cell = cells[row][col];
+                    cell.setValue(value, possible ? validValueColor : invalidValueColor);
+                    cell.select();
+                    selectedCell = cell;
                 }
             } else if (command.equals("Solve")) {
                 if (quiz.solve()) {

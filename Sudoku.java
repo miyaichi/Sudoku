@@ -32,7 +32,7 @@ public class Sudoku {
      * Sudoku repl mode.
      */
     static public void repl() {
-        final int LEVEL = 6; // Quiz level. (1 .. 7)
+        final int LEVEL = 5; // Quiz level. (1 .. 7)
         final int SIZE = 3; // Size of the quiz.
         final String PROMPT = "> ";
         final String help = "Available commands:\n" +
@@ -67,16 +67,16 @@ public class Sudoku {
                     quiz.solve();
                     break;
                 case "hint":
-                    try {
-                        row = Integer.parseInt(tokens[1]);
-                        col = Integer.parseInt(tokens[2]);
-                        if (row < 0 || row > 8 || col < 0 || col > 8) {
-                            throw new RuntimeException("Invalid row or column");
+                    SudokuSolver solver = new SudokuSolver(quiz.getBoard());
+                    SudokuSolver.Hint[] hints = solver.getHints();
+
+                    if (hints.length == 0) {
+                        System.out.println("No hints.");
+                    } else {
+                        for (int i = 0; i < hints.length; i++) {
+                            System.out.println(
+                                    "row: " + hints[i].row + ", col: " + hints[i].col + ", value: " + hints[i].value);
                         }
-                        value = quiz.getHint(row, col);
-                        System.out.println("Hint " + row + " " + col + " returns " + value);
-                    } catch (Exception e) {
-                        System.out.println("Usage: hint <row> <col>");
                     }
                     break;
                 case "set":

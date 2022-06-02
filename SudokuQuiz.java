@@ -211,29 +211,6 @@ public class SudokuQuiz {
     }
 
     /**
-     * Provide the hint for the next cell.
-     * 
-     * @param row
-     * @param col
-     * @return value
-     */
-    public int getHint(int row, int col) {
-        for (int value = 1; value <= 9; value++) {
-            if (isPossible(board, row, col, value)) {
-                int[][] temp = new int[board.length][];
-                for (int i = 0; i < board.length; i++) {
-                    temp[i] = board[i].clone();
-                }
-                temp[row][col] = value;
-                if (solve(temp)) {
-                    return value;
-                }
-            }
-        }
-        return 0;
-    }
-
-    /**
      * Solve the board with backtracking.
      * 
      * @return true: solved, false: cannot solve.
