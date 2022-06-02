@@ -17,9 +17,9 @@ public class SudokuBoard {
     private static final int SIZE = 3; // Size of the quiz.
     private SudokuQuiz quiz = new SudokuQuiz(SIZE, LEVEL);
 
-    private final JFrame frame;
-    private Cell[][] cells;
-    private Cell selectedCell = null;
+    private final JFrame frame; // The main frame.
+    private Cell[][] cells; // Cells of the board.
+    private Cell selectedCell = null; // Currently selected cell.
 
     private Color selectedCellColor = new Color(137, 189, 222); // Sky Blue
     private Color fixedCellColor = new Color(163, 185, 224); // Day dream
@@ -44,7 +44,7 @@ public class SudokuBoard {
         frame.setVisible(true);
     }
 
-    void buildFrame() {
+    private void buildFrame() {
         final int GAP = 4; // Gaps between boardPanels.
 
         JPanel commandPanel = new JPanel();
@@ -100,6 +100,30 @@ public class SudokuBoard {
         }
     }
 
+    /**
+     * Updates the board with the current state of the quiz.
+     */
+    private void updateBoard() {
+        for (int row = 0; row < cells.length; row++) {
+            for (int col = 0; col < cells[row].length; col++) {
+                Cell cell = cells[row][col];
+                int value = quiz.getValue(row, col);
+                if (quiz.isEditable(row, col)) {
+                    cell.setValue(value, validValueColor);
+                    cell.setEnabled(true);
+                    cell.setBackground(editableCellColor);
+                } else {
+                    cell.setValue(value, fixedValueColor);
+                    cell.setEnabled(false);
+                    cell.setBackground(fixedCellColor);
+                }
+            }
+        }
+    }
+
+    /**
+     * Class for Sudoku cells.
+     */
     class Cell extends JButton {
         private Dimension dimension = new Dimension(40, 40); // size of cell.
         private int row, col; // row and column of cell.
@@ -141,27 +165,6 @@ public class SudokuBoard {
 
         public void deselect() {
             setBackground(editableCellColor);
-        }
-    }
-
-    /**
-     * Updates the board with the current state of the quiz.
-     */
-    public void updateBoard() {
-        for (int row = 0; row < cells.length; row++) {
-            for (int col = 0; col < cells[row].length; col++) {
-                Cell cell = cells[row][col];
-                int value = quiz.getValue(row, col);
-                if (quiz.isEditable(row, col)) {
-                    cell.setValue(value, validValueColor);
-                    cell.setEnabled(true);
-                    cell.setBackground(editableCellColor);
-                } else {
-                    cell.setValue(value, fixedValueColor);
-                    cell.setEnabled(false);
-                    cell.setBackground(fixedCellColor);
-                }
-            }
         }
     }
 

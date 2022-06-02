@@ -19,19 +19,19 @@ public class SudokuQuiz {
     /**
      * A utility function to print the board
      * 
-     * @param matrix
+     * @param board
      */
     public void dumpBoard() {
         dumpBoard(board);
     }
 
-    public void dumpBoard(int[][] matrix) {
+    public void dumpBoard(int[][] board) {
         System.out.println("-------------------");
         System.out.println("  0 1 2 3 4 5 6 7 8");
-        for (int row = 0; row < matrix.length; row++) {
+        for (int row = 0; row < board.length; row++) {
             System.out.print(row + " ");
-            for (int col = 0; col < matrix[row].length; col++) {
-                int value = matrix[row][col];
+            for (int col = 0; col < board[row].length; col++) {
+                int value = board[row][col];
                 System.out.print((value == 0 ? "." : value) + " ");
             }
             System.out.println();
@@ -110,9 +110,9 @@ public class SudokuQuiz {
         return isPossible(board, row, col, value);
     }
 
-    public boolean isPossible(int[][] matrix, int row, int col, int value) {
+    public boolean isPossible(int[][] board, int row, int col, int value) {
         for (int i = 0; i < size * 3; i++) {
-            if (matrix[row][i] == value || matrix[i][col] == value) {
+            if (board[row][i] == value || board[i][col] == value) {
                 return false;
             }
         }
@@ -120,7 +120,7 @@ public class SudokuQuiz {
         int colStart = col / 3 * 3;
         for (int i = rowStart; i < rowStart + 3; i++) {
             for (int j = colStart; j < colStart + 3; j++) {
-                if (matrix[i][j] == value) {
+                if (board[i][j] == value) {
                     return false;
                 }
             }
@@ -246,17 +246,17 @@ public class SudokuQuiz {
         return solved;
     }
 
-    public boolean solve(int[][] matrix) {
-        for (int row = 0; row < matrix.length; row++) {
-            for (int col = 0; col < matrix[row].length; col++) {
-                if (matrix[row][col] == 0) {
+    public boolean solve(int[][] board) {
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col < board[row].length; col++) {
+                if (board[row][col] == 0) {
                     for (int value = 1; value <= size * 3; value++) {
-                        if (isPossible(matrix, row, col, value)) {
-                            matrix[row][col] = value;
-                            if (solve(matrix)) {
+                        if (isPossible(board, row, col, value)) {
+                            board[row][col] = value;
+                            if (solve(board)) {
                                 return true;
                             }
-                            matrix[row][col] = 0;
+                            board[row][col] = 0;
                         }
                     }
                     return false;
