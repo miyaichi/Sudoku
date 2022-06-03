@@ -57,6 +57,12 @@ public class SudokuQuiz {
         return board;
     }
 
+    /**
+     * Clone the board.
+     * 
+     * @param board
+     * @return
+     */
     public int[][] cloneBoard(int[][] board) {
         int[][] clone = new int[board.length][];
         for (int i = 0; i < board.length; i++) {
@@ -210,11 +216,7 @@ public class SudokuQuiz {
             }
 
             // Check if the quiz is solvable.
-            int[][] temp = new int[quiz.length][];
-            for (int i = 0; i < quiz.length; i++) {
-                temp[i] = quiz[i].clone();
-            }
-            if (solve(temp)) {
+            if (solve(cloneBoard(quiz))) {
                 break;
             }
         }
