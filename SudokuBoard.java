@@ -182,8 +182,9 @@ public class SudokuBoard {
                 quiz.newQuiz();
                 updateBoard();
             } else if (command.equals("Hint")) {
-                SudokuSolver solver = new SudokuSolver(quiz.getBoard());
+                SudokuSolver solver = new SudokuSolver(quiz);
                 SudokuSolver.Hint[] hints = solver.getHints();
+
                 if (hints.length == 0) {
                     JOptionPane.showMessageDialog(frame, "No hints available.");
                 } else {

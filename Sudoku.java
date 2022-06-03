@@ -67,7 +67,7 @@ public class Sudoku {
                     quiz.solve();
                     break;
                 case "hint":
-                    SudokuSolver solver = new SudokuSolver(quiz.getBoard());
+                    SudokuSolver solver = new SudokuSolver(quiz);
                     SudokuSolver.Hint[] hints = solver.getHints();
 
                     if (hints.length == 0) {

@@ -40,12 +40,29 @@ public class SudokuQuiz {
     }
 
     /**
+     * Get the quiz size.
+     * 
+     * @return
+     */
+    public int getSize() {
+        return size;
+    }
+
+    /**
      * Get current board.
      * 
      * @return board
      */
     public int[][] getBoard() {
         return board;
+    }
+
+    public int[][] cloneBoard(int[][] board) {
+        int[][] clone = new int[board.length][];
+        for (int i = 0; i < board.length; i++) {
+            clone[i] = board[i].clone();
+        }
+        return clone;
     }
 
     /**
