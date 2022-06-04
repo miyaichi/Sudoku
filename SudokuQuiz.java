@@ -49,6 +49,15 @@ public class SudokuQuiz {
     }
 
     /**
+     * Get current quiz.
+     * 
+     * @return quiz
+     */
+    public int[][] getQuiz() {
+        return quiz;
+    }
+
+    /**
      * Get current board.
      * 
      * @return board
