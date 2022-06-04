@@ -88,7 +88,7 @@ public class SudokuQuiz {
      * @param value
      */
     public boolean setValue(int row, int col, int value) {
-        if (!isEditable(row, col)) {
+        if (isFixed(row, col)) {
             return false;
         }
         boolean possible = isPossible(row, col, value);
@@ -132,6 +132,17 @@ public class SudokuQuiz {
     }
 
     /**
+     * Check if board[row, col] is fixed.
+     * 
+     * @param row
+     * @param col
+     * @return true: fixed, false: editable.
+     */
+    public boolean isFixed(int row, int col) {
+        return quiz[row][col] != 0;
+    }
+
+    /**
      * Check if value is possible to put in the board[row, col].
      * 
      * @param row
@@ -161,30 +172,44 @@ public class SudokuQuiz {
     }
 
     /**
-     * Check if the board is solved.
+     * Remaining blank cells.
      * 
-     * @return true: solved, false: there are blank cells.
+     * @return the number of blank cells.
      */
-    public boolean isSolved() {
-        for (int row = 0; row < board.length; row++) {
-            for (int col = 0; col < board[row].length; col++) {
-                if (board[row][col] == 0) {
-                    return false;
+    public int remaining() {
+        int count = size * 3 * size * 3;
+        for (int row = 0; row < size * 3; row++) {
+            for (int col = 0; col < size * 3; col++) {
+                if (board[row][col] != 0) {
+                    count--;
                 }
             }
         }
-        return true;
+        return count;
+    }
+
+    /**
+     * Remaining blank number.
+     * 
+     * @return the number of blank number.
+     */
+    public int remaining(int value) {
+        int count = 9;
+        for (int row = 0; row < size * 3; row++) {
+            for (int col = 0; col < size * 3; col++) {
+                if (board[row][col] == value) {
+                    count--;
+                }
+            }
+        }
+        return count;
     }
 
     /**
      * Reset the board to the quiz.
      */
     public void resetQuiz() {
-        for (int row = 0; row < quiz.length; row++) {
-            for (int col = 0; col < quiz[row].length; col++) {
-                board[row][col] = quiz[row][col];
-            }
-        }
+        board = cloneBoard(quiz);
         operations.clear();
     }
 
@@ -193,9 +218,8 @@ public class SudokuQuiz {
      */
     public void newQuiz() {
         while (true) {
-            // Generate random and solvable quiz.
+            // Fill the upper left block with random numbers and backtrack to create a quiz.
             quiz = new int[size * 3][size * 3];
-
             for (int row = 0; row < 3; row++) {
                 for (int col = 0; col < 3; col++) {
                     while (true) {
@@ -207,21 +231,6 @@ public class SudokuQuiz {
                     }
                 }
             }
-
-            /*
-             * quiz[(int) (Math.random() * size * 2) + 3][0] = (int) (Math.random() * 9 +
-             * 1);
-             * quiz[0][(int) (Math.random() * size * 2) + 3] = (int) (Math.random() * 9 +
-             * 1);
-             * while (true) {
-             * int value = (int) (Math.random() * 9 + 1);
-             * if (isPossible(quiz, 0, 0, value)) {
-             * quiz[0][0] = value;
-             * break;
-             * }
-             * }
-             */
-
             if (!solve(quiz)) {
                 continue;
             }
@@ -264,10 +273,10 @@ public class SudokuQuiz {
     }
 
     public boolean solve(int[][] board) {
-        for (int row = 0; row < board.length; row++) {
-            for (int col = 0; col < board[row].length; col++) {
+        for (int row = 0; row < size * 3; row++) {
+            for (int col = 0; col < size * 3; col++) {
                 if (board[row][col] == 0) {
-                    for (int value = 1; value <= size * 3; value++) {
+                    for (int value = 1; value <= 9; value++) {
                         if (isPossible(board, row, col, value)) {
                             board[row][col] = value;
                             if (solve(board)) {

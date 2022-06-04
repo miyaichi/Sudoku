@@ -262,7 +262,7 @@ public class SudokuBoard {
                 int value = Integer.parseInt(button.getText());
                 boolean possible = quiz.setValue(selectedCell.getRow(), selectedCell.getCol(), value);
                 selectedCell.setValue(value, possible ? validValueColor : invalidValueColor);
-                if (possible && quiz.isSolved()) {
+                if (possible && quiz.remaining() == 0) {
                     JOptionPane.showMessageDialog(null, "Congratulations, you win!");
                 }
             }

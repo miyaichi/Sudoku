@@ -90,7 +90,7 @@ public class Sudoku {
                         if (quiz.isEditable(row, col)) {
                             boolean valid = quiz.setValue(row, col, value);
                             System.out.println("Set " + row + " " + col + " " + value + " returns " + valid);
-                            if (valid && quiz.isSolved()) {
+                            if (valid && quiz.remaining() == 0) {
                                 System.out.println("Solved!");
                             }
                         } else {
