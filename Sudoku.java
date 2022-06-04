@@ -39,7 +39,7 @@ public class Sudoku {
                 " 1. new\n" +
                 " 2. reset\n" +
                 " 3. solve\n" +
-                " 4. hint <row> <col>\n" +
+                " 4. hint\n" +
                 " 5. set <row> <col> <value>\n" +
                 " 6. undo\n" +
                 " 7. quit\n";

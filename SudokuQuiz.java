@@ -193,19 +193,35 @@ public class SudokuQuiz {
      */
     public void newQuiz() {
         while (true) {
-            int row, col;
+            // Generate random and solvable quiz.
+            quiz = new int[size * 3][size * 3];
 
-            // Clear quiz.
-            for (row = 0; row < quiz.length; row++) {
-                for (col = 0; col < quiz[row].length; col++) {
-                    quiz[row][col] = 0;
+            for (int row = 0; row < 3; row++) {
+                for (int col = 0; col < 3; col++) {
+                    while (true) {
+                        int value = (int) (Math.random() * 9 + 1);
+                        if (isPossible(quiz, row, col, value)) {
+                            quiz[row][col] = value;
+                            break;
+                        }
+                    }
                 }
             }
 
-            // Generate solvable quiz.
-            row = (int) (Math.random() * size * 3);
-            col = (int) (Math.random() * size * 3);
-            quiz[row][col] = (int) (Math.random() * 9 + 1);
+            /*
+             * quiz[(int) (Math.random() * size * 2) + 3][0] = (int) (Math.random() * 9 +
+             * 1);
+             * quiz[0][(int) (Math.random() * size * 2) + 3] = (int) (Math.random() * 9 +
+             * 1);
+             * while (true) {
+             * int value = (int) (Math.random() * 9 + 1);
+             * if (isPossible(quiz, 0, 0, value)) {
+             * quiz[0][0] = value;
+             * break;
+             * }
+             * }
+             */
+
             if (!solve(quiz)) {
                 continue;
             }
@@ -214,8 +230,8 @@ public class SudokuQuiz {
             for (int l = level; l > 0; l--) {
                 for (int b = 0; b < size * size; b++) {
                     while (true) {
-                        row = (int) (b / size * 3 + Math.random() * size);
-                        col = (int) (b % size * 3 + Math.random() * size);
+                        int row = (int) (b / size * 3 + Math.random() * size);
+                        int col = (int) (b % size * 3 + Math.random() * size);
                         if (quiz[row][col] != 0) {
                             quiz[row][col] = 0;
                             break;
@@ -224,17 +240,13 @@ public class SudokuQuiz {
                 }
             }
 
-            // Check if the quiz is solvable.
+            // Make sure the quiz is solvable, and if not, try again.
             if (solve(cloneBoard(quiz))) {
                 break;
             }
         }
 
-        for (int row = 0; row < quiz.length; row++) {
-            for (int col = 0; col < quiz[row].length; col++) {
-                board[row][col] = quiz[row][col];
-            }
-        }
+        board = cloneBoard(quiz);
         operations.clear();
     }
 

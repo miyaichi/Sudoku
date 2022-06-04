@@ -60,10 +60,9 @@ class SudokuSolver {
      */
     public Hint[] getHints() {
         List<Hint> hints = new ArrayList<Hint>();
-        Hint hint;
 
         while (true) {
-            hint = findNackedSingle();
+            Hint hint = findNackedSingle();
             if (hint != null) {
                 board[hint.row][hint.col] = hint.value;
                 fixCandidate(hint.row, hint.col, hint.value);
@@ -179,7 +178,7 @@ class SudokuSolver {
         return null;
     }
 
-    /**
+    /*
      * Hidden Single reduction.
      * 
      * @return true if the candidate reduction is successful.
@@ -188,69 +187,49 @@ class SudokuSolver {
         for (int row = 0; row < size * 3; row++) {
             for (int col = 0; col < size * 3; col++) {
                 int[] ca = getCandidates(row, col);
-                if (ca.length == 1) {
-                    continue;
-                }
+                if (ca.length > 1) {
+                    for (int value : ca) {
+                        int count;
 
-                for (int value : ca) {
-                    int count;
-
-                    count = 0;
-                    for (int r = 0; r < size * 3; r++) {
-                        if (candidates[r][col][value - 1]) {
-                            count++;
-                        }
-                    }
-                    if (count == 1) {
-                        System.out.println("Hidden Single Reduction(R): " + row + " " + col + " " + value);
-                        for (int v = 1; v <= 9; v++) {
-                            if (v != value) {
-                                if (candidates[row][col][v - 1]) {
-                                    candidates[row][col][v - 1] = false;
-                                }
-                            }
-                        }
-                        return true;
-                    }
-
-                    count = 0;
-                    for (int c = 0; c < size * 3; c++) {
-                        if (candidates[row][c][value - 1]) {
-                            count++;
-                        }
-                    }
-                    if (count == 1) {
-                        System.out.println("Hidden Single Reduction(C): " + row + " " + col + " " + value);
-                        for (int v = 1; v <= 9; v++) {
-                            if (v != value) {
-                                if (candidates[row][col][v - 1]) {
-                                    candidates[row][col][v - 1] = false;
-                                }
-                            }
-                        }
-                        return true;
-                    }
-
-                    count = 0;
-                    int blockRow = row / size;
-                    int blockCol = col / size;
-                    for (int r = blockRow * size; r < (blockRow + 1) * size; r++) {
-                        for (int c = blockCol * size; c < (blockCol + 1) * size; c++) {
-                            if (candidates[r][c][value - 1]) {
+                        count = 0;
+                        for (int r = 0; r < size * 3; r++) {
+                            if (candidates[r][col][value - 1]) {
                                 count++;
                             }
                         }
-                    }
-                    if (count == 1) {
-                        System.out.println("Hidden Single Reduction(B): " + row + " " + col + " " + value);
-                        for (int v = 1; v <= 9; v++) {
-                            if (v != value) {
-                                if (candidates[row][col][v - 1]) {
-                                    candidates[row][col][v - 1] = false;
+                        if (count == 1) {
+                            candidates[row][col] = new boolean[9];
+                            candidates[row][col][value - 1] = true;
+                            return true;
+                        }
+
+                        count = 0;
+                        for (int c = 0; c < size * 3; c++) {
+                            if (candidates[row][c][value - 1]) {
+                                count++;
+                            }
+                        }
+                        if (count == 1) {
+                            candidates[row][col] = new boolean[9];
+                            candidates[row][col][value - 1] = true;
+                            return true;
+                        }
+
+                        count = 0;
+                        int blockRow = row / size;
+                        int blockCol = col / size;
+                        for (int r = blockRow * size; r < (blockRow + 1) * size; r++) {
+                            for (int c = blockCol * size; c < (blockCol + 1) * size; c++) {
+                                if (candidates[r][c][value - 1]) {
+                                    count++;
                                 }
                             }
                         }
-                        return true;
+                        if (count == 1) {
+                            candidates[row][col] = new boolean[9];
+                            candidates[row][col][value - 1] = true;
+                            return true;
+                        }
                     }
                 }
             }
@@ -272,7 +251,6 @@ class SudokuSolver {
         for (int row = 0; row < size * 3; row++) {
             for (int col = 0; col < size * 3; col++) {
                 int[] ca = getCandidates(row, col);
-
                 if (ca.length >= 2 && ca.length <= 4) {
                     int count;
 
@@ -382,7 +360,6 @@ class SudokuSolver {
                                 if (r != row) {
                                     for (int c = blockCol * size; c < (blockCol + 1) * size; c++) {
                                         if (candidates[r][c][value - 1]) {
-                                            System.out.println("Box/Line Reduction(R): " + r + " " + c + " " + value);
                                             candidates[r][c][value - 1] = false;
                                             reduceCandidates = true;
                                         }
@@ -420,7 +397,6 @@ class SudokuSolver {
                                 if (c != col) {
                                     for (int r = blockRow * size; r < (blockRow + 1) * size; r++) {
                                         if (candidates[r][c][value - 1]) {
-                                            System.out.println("Box/Line Reduction(C): " + r + " " + c + " " + value);
                                             candidates[r][c][value - 1] = false;
                                             reduceCandidates = true;
                                         }

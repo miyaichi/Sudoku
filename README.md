@@ -37,7 +37,7 @@ Available commands:
  1. new
  2. reset
  3. solve
- 4. hint <row> <col>
+ 4. hint
  5. set <row> <col> <value>
  6. undo
  7. quit
@@ -45,7 +45,7 @@ Available commands:
 
 2. GUI swing mode
 
-<img alt="SudokuScreen" src="https://user-images.githubusercontent.com/129797/170844401-bd4cd8c6-cd42-4757-92b0-1ed18a39ba7f.png" style="width: 50%"/>
+<img  src="https://user-images.githubusercontent.com/129797/172027354-910f97b1-6a1a-4c88-ad1c-cc4462826418.png" style="width: 50%"/>
 
 ## Usage:
 
@@ -62,12 +62,38 @@ Sudoku game logic with the new game, solve the game, provide a hint, undo an act
 
 数独ゲームの、作成、解く、ヒント、アクションを元に戻す、ゲームをリセットを実装しました。
 
+## Solver
+
+It implemented the following solver strategies.
+
+以下のソルバー戦略を実装した。
+
+- Nacked Single.
+
+  If there is only one candidate, it is assumed to be the solution for that cell.
+
+  候補が 1 つしかない場合、そのセルの解とする。
+
+- Hidden Single reduction.
+
+  If a candidate appears only once in a row, column, or block, it can reduce candidates.
+
+  候補が行、列、ブロックに 1 回しか出現しない場合、候補を減らすことができる。
+
+- Nacked Pairs, Triplets, Quads reduction.
+
+  If the pairs, triples, and quads appear in the row, column, and block, it can reduce candidates.
+
+  ペア、トリプル、クアッドが行、列、ブロックに出現していれば、候補を減らすことができる。
+
+- Box/Line reduction.
+
+  If a candidate only appears two or three times in a row or column and is all in the same block, it can reduce candidates.
+
+  候補が行や列に 2 ～ 3 回しか登場せず、すべて同じブロックにある場合、候補を減らすことができる。
+
 ## To-Do:
-
-- Game Creation - I have created a goal and then randomly blanked cells, but the blank positions are biased and have not created a good game.
-
-- ゲーム作成 - ゴールを作ってからランダムにセルを空白にしましたが、空白の位置が偏ってしまい、良いゲームが作成できていません。
 
 - Animation during solving - In the Solve function, I wanted to use backtracking to show the step-by-step process of finding the goal. However, I could not effectively implement the ActionListener function to display the animation.
 
-- 解く時のアニメーション - Solve 関数では、バックトラックを使用してゴールを見つけるまでの過程を段階的に表示したいと考えました。しかし、アニメーションを表示するための ActionListener 関数を効果的に実装することができませんでした。
+- 解く際のアニメーション - Solve 関数では、バックトラックを使用してゴールを見つけるまでの過程を段階的に表示したいと考えました。しかし、アニメーションを表示するための ActionListener 関数を効果的に実装することができませんでした。
