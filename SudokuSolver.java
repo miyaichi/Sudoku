@@ -4,13 +4,15 @@ import java.util.List;
 
 class SudokuSolver {
     private int size; // Quiz size.
+    private int[][] quiz; // Sudoku quiz.
     private int[][] board; // Quiz board.
     private boolean[][][] candidates; // candidates[row][col][value - 1] = true if value is a candidate for (row,
                                       // col).
 
     public SudokuSolver(SudokuQuiz quiz) {
-        size = quiz.getSize();
-        board = quiz.cloneBoard(quiz.getBoard());
+        this.size = quiz.getSize();
+        this.quiz = quiz.getQuiz();
+        this.board = quiz.cloneBoard(quiz.getBoard());
 
         candidates = new boolean[size * 3][size * 3][9];
         for (int row = 0; row < size * 3; row++) {
@@ -28,8 +30,6 @@ class SudokuSolver {
                 }
             }
         }
-
-        dumpCandidates();
     }
 
     /**
@@ -43,7 +43,7 @@ class SudokuSolver {
                 for (int col = 0; col < size * 3; col++) {
                     for (int c = 0; c < 3; c++) {
                         int value = r * 3 + c + 1;
-                        System.out.print(candidates[row][col][value - 1] ? value : board[row][col] == 0 ? "." : " ");
+                        System.out.print(candidates[row][col][value - 1] ? value : quiz[row][col] == 0 ? "." : " ");
                     }
                     System.out.print("|");
                 }
@@ -71,15 +71,18 @@ class SudokuSolver {
                 continue;
             }
 
-            hint = findHiddenSingle();
-            if (hint != null) {
-                board[hint.row][hint.col] = hint.value;
-                fixCandidate(hint.row, hint.col, hint.value);
-                hints.add(hint);
+            // Hidden Single reduction.
+            if (hiddenSingleReduction()) {
                 continue;
             }
 
-            if (checkNackedPair()) {
+            // Nacked Pairs, Triplets, Quads reduction.
+            if (nakidsReduction()) {
+                continue;
+            }
+
+            // Box/Line Reduction.
+            if (boxLineReduction()) {
                 continue;
             }
 
@@ -87,6 +90,8 @@ class SudokuSolver {
 
             break;
         }
+
+        dumpCandidates();
         return hints.toArray(new Hint[hints.size()]);
     }
 
@@ -151,15 +156,21 @@ class SudokuSolver {
     }
 
     /**
-     * Find the nacked single.
+     * Find the Nacked Single.
      * 
-     * @return position of the nacked single.
+     * @return position of the Nacked Single.
      */
     private Hint findNackedSingle() {
         for (int row = 0; row < size * 3; row++) {
             for (int col = 0; col < size * 3; col++) {
                 if (board[row][col] == 0) {
-                    if (isNackedSingle(row, col)) {
+                    int count = 0;
+                    for (int value = 1; value <= 9; value++) {
+                        if (candidates[row][col][value - 1]) {
+                            count++;
+                        }
+                    }
+                    if (count == 1) {
                         return new Hint(row, col, getCandidates(row, col)[0]);
                     }
                 }
@@ -169,91 +180,78 @@ class SudokuSolver {
     }
 
     /**
-     * Find the hidden single.
+     * Hidden Single reduction.
      * 
-     * @return position of the hidden single.
+     * @return true if the candidate reduction is successful.
      */
-    private Hint findHiddenSingle() {
-        for (int row = 0; row < size * 3; row++) {
-            for (int col = 0; col < size * 3; col++) {
-                if (board[row][col] == 0) {
-                    int[] candidate = getCandidates(row, col);
-                    for (int i = 0; i < candidate.length; i++) {
-                        if (isHiddenSingle(row, col, candidate[i])) {
-                            return new Hint(row, col, candidate[i]);
-                        }
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Check if the cell is a nacked single, update the candidates.
-     * 
-     * return true if the candidate is updated.
-     */
-    private boolean checkNackedPair() {
-        boolean updateCandidates = false;
-
+    private boolean hiddenSingleReduction() {
         for (int row = 0; row < size * 3; row++) {
             for (int col = 0; col < size * 3; col++) {
                 int[] ca = getCandidates(row, col);
-                if (ca.length != 2) {
+                if (ca.length == 1) {
                     continue;
                 }
 
-                for (int r = row + 1; r < size * 3; r++) {
-                    if (Arrays.equals(ca, getCandidates(r, col))) {
-                        for (int i = 0; i < size * 3; i++) {
-                            if (i != row && i != r) {
-                                if (candidates[i][col][ca[0] - 1] || candidates[i][col][ca[1] - 1]) {
-                                    candidates[i][col][ca[0] - 1] = false;
-                                    candidates[i][col][ca[1] - 1] = false;
-                                    updateCandidates = true;
+                for (int value : ca) {
+                    int count;
+
+                    count = 0;
+                    for (int r = 0; r < size * 3; r++) {
+                        if (candidates[r][col][value - 1]) {
+                            count++;
+                        }
+                    }
+                    if (count == 1) {
+                        System.out.println("Hidden Single Reduction(R): " + row + " " + col + " " + value);
+                        for (int v = 1; v <= 9; v++) {
+                            if (v != value) {
+                                if (candidates[row][col][v - 1]) {
+                                    candidates[row][col][v - 1] = false;
                                 }
                             }
                         }
+                        return true;
                     }
-                }
 
-                for (int c = col + 1; c < size * 3; c++) {
-                    if (Arrays.equals(ca, getCandidates(row, c))) {
-                        for (int i = 0; i < size * 3; i++) {
-                            if (i != col && i != c) {
-                                if (candidates[row][i][ca[0] - 1] || candidates[row][i][ca[1] - 1]) {
-                                    candidates[row][i][ca[0] - 1] = false;
-                                    candidates[row][i][ca[1] - 1] = false;
-                                    updateCandidates = true;
+                    count = 0;
+                    for (int c = 0; c < size * 3; c++) {
+                        if (candidates[row][c][value - 1]) {
+                            count++;
+                        }
+                    }
+                    if (count == 1) {
+                        System.out.println("Hidden Single Reduction(C): " + row + " " + col + " " + value);
+                        for (int v = 1; v <= 9; v++) {
+                            if (v != value) {
+                                if (candidates[row][col][v - 1]) {
+                                    candidates[row][col][v - 1] = false;
                                 }
                             }
                         }
+                        return true;
                     }
-                }
 
-                int blockRow = row / size;
-                int blockCol = col / size;
-                for (int r = row + 1; r < (blockRow + 1) * size; r++) {
-                    for (int c = col + 1; c < (blockCol + 1) * size; c++) {
-                        if (Arrays.equals(ca, getCandidates(r, c))) {
-                            for (int i = blockRow * size; i < (blockRow + 1) * size; i++) {
-                                for (int j = blockCol * size; j < (blockCol + 1) * size; j++) {
-                                    if (i != row && j != col && i != r && j != c) {
-                                        if (candidates[i][j][ca[0] - 1] || candidates[i][j][ca[1] - 1]) {
-                                            candidates[i][j][ca[0] - 1] = false;
-                                            candidates[i][j][ca[1] - 1] = false;
-                                            updateCandidates = true;
-                                        }
-                                    }
-                                }
+                    count = 0;
+                    int blockRow = row / size;
+                    int blockCol = col / size;
+                    for (int r = blockRow * size; r < (blockRow + 1) * size; r++) {
+                        for (int c = blockCol * size; c < (blockCol + 1) * size; c++) {
+                            if (candidates[r][c][value - 1]) {
+                                count++;
                             }
                         }
                     }
-                }
-
-                if (updateCandidates) {
-                    return true;
+                    if (count == 1) {
+                        System.out.println("Hidden Single Reduction(B): " + row + " " + col + " " + value);
+                        for (int v = 1; v <= 9; v++) {
+                            if (v != value) {
+                                if (candidates[row][col][v - 1]) {
+                                    candidates[row][col][v - 1] = false;
+                                }
+                            }
+                        }
+                        return true;
+                    }
                 }
             }
         }
@@ -262,52 +260,180 @@ class SudokuSolver {
     }
 
     /**
-     * Check if the cell at (row, col) is a naked single.
+     * Nacked Pairs, Triplets, Quads reduction.
+     * If the pairs, triples, and quads appear in the row, column, and block, it can
+     * reduce candidates.
      * 
-     * @param row
-     * @param col
-     * @return true if the cell at (row, col) is a naked single.
+     * @return true if the candidate reduction is successful.
      */
-    private boolean isNackedSingle(int row, int col) {
-        int count = 0;
-        for (int value = 1; value <= 9; value++) {
-            if (candidates[row][col][value - 1]) {
-                count++;
-            }
-        }
-        return count == 1;
-    }
+    private boolean nakidsReduction() {
+        boolean reduceCandidates = false;
 
-    /**
-     * Check if the cell at (row, col) is a hidden single.
-     * 
-     * @param row
-     * @param col
-     * @return true if the cell at (row, col) is a hidden single.
-     */
-    private boolean isHiddenSingle(int row, int col, int value) {
-        for (int r = 0; r < size * 3; r++) {
-            if (r != row && candidates[r][col][value - 1]) {
-                return false;
-            }
-        }
+        for (int row = 0; row < size * 3; row++) {
+            for (int col = 0; col < size * 3; col++) {
+                int[] ca = getCandidates(row, col);
 
-        for (int c = 0; c < size * 3; c++) {
-            if (c != col && candidates[row][c][value - 1]) {
-                return false;
-            }
-        }
+                if (ca.length >= 2 && ca.length <= 4) {
+                    int count;
 
-        int blockRow = row / size;
-        int blockCol = col / size;
-        for (int r = blockRow * size; r < (blockRow + 1) * size; r++) {
-            for (int c = blockCol * size; c < (blockCol + 1) * size; c++) {
-                if (r != row && c != col && candidates[r][c][value - 1]) {
-                    return false;
+                    count = ca.length - 1;
+                    for (int r = row + 1; r < size * 3; r++) {
+                        if (Arrays.equals(candidates[row][col], candidates[r][col])) {
+                            count--;
+                        }
+                    }
+                    if (count == 0) {
+                        for (int r = 0; r < size * 3; r++) {
+                            if (!Arrays.equals(candidates[row][col], candidates[r][col])) {
+                                for (int i = 0; i < ca.length; i++) {
+                                    if (candidates[r][col][ca[i] - 1]) {
+                                        candidates[r][col][ca[i] - 1] = false;
+                                        reduceCandidates = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    count = ca.length - 1;
+                    for (int c = col + 1; c < size * 3; c++) {
+                        if (Arrays.equals(candidates[row][col], candidates[row][c])) {
+                            count--;
+                        }
+                    }
+                    if (count == 0) {
+                        for (int c = 0; c < size * 3; c++) {
+                            if (!Arrays.equals(candidates[row][col], candidates[row][c])) {
+                                for (int i = 0; i < ca.length; i++) {
+                                    if (candidates[row][c][ca[i] - 1]) {
+                                        candidates[row][c][ca[i] - 1] = false;
+                                        reduceCandidates = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    count = ca.length - 1;
+                    int blockRow = row / size;
+                    int blockCol = col / size;
+                    for (int r = row + 1; r < (blockRow + 1) * size; r++) {
+                        for (int c = col + 1; c < (blockCol + 1) * size; c++) {
+                            if (r != row && c != col) {
+                                if (Arrays.equals(candidates[row][col], candidates[r][c])) {
+                                    count--;
+                                }
+                            }
+                        }
+                    }
+                    if (count == 0) {
+                        for (int r = 0; r < size * 3; r++) {
+                            for (int c = 0; c < size * 3; c++) {
+                                if (!Arrays.equals(candidates[row][col], candidates[r][c])) {
+                                    for (int i = 0; i < ca.length; i++) {
+                                        if (candidates[r][c][ca[i] - 1]) {
+                                            candidates[r][c][ca[i] - 1] = false;
+                                            reduceCandidates = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
-        return true;
+
+        return reduceCandidates;
+    }
+
+    /**
+     * Box/Line Reduction.
+     * If a candidate only appears two or three times in a row or column and is all
+     * in the same block, it can reduce candidates.
+     * 
+     * @return true if the candidate reduction is successful.
+     */
+    private boolean boxLineReduction() {
+        boolean reduceCandidates = false;
+
+        for (int row = 0; row < size * 3; row++) {
+            int[][] ca = new int[size][9];
+            for (int col = 0; col < size * 3; col++) {
+                for (int value = 1; value <= 9; value++) {
+                    if (candidates[row][col][value - 1]) {
+                        ca[col / size][value - 1]++;
+                    }
+                }
+            }
+
+            for (int value = 1; value <= 9; value++) {
+                int count = 0;
+                for (int blockCol = 0; blockCol < size; blockCol++) {
+                    if (ca[blockCol][value - 1] > 0) {
+                        count++;
+                    }
+                }
+                if (count == 1) {
+                    for (int blockCol = 0; blockCol < size; blockCol++) {
+                        if (ca[blockCol][value - 1] > 1) {
+                            int blockRow = row / size;
+                            for (int r = blockRow * size; r < (blockRow + 1) * size; r++) {
+                                if (r != row) {
+                                    for (int c = blockCol * size; c < (blockCol + 1) * size; c++) {
+                                        if (candidates[r][c][value - 1]) {
+                                            System.out.println("Box/Line Reduction(R): " + r + " " + c + " " + value);
+                                            candidates[r][c][value - 1] = false;
+                                            reduceCandidates = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        for (int col = 0; col < size * 3; col++) {
+            int[][] ca = new int[size][9];
+            for (int row = 0; row < size * 3; row++) {
+                for (int value = 1; value <= 9; value++) {
+                    if (candidates[row][col][value - 1]) {
+                        ca[row / size][value - 1]++;
+                    }
+                }
+            }
+
+            for (int value = 1; value <= 9; value++) {
+                int count = 0;
+                for (int blockRow = 0; blockRow < size; blockRow++) {
+                    if (ca[blockRow][value - 1] > 0) {
+                        count++;
+                    }
+                }
+                if (count == 1) {
+                    for (int blockRow = 0; blockRow < size; blockRow++) {
+                        if (ca[blockRow][value - 1] > 1) {
+                            int blockCol = col / size;
+                            for (int c = blockCol * size; c < (blockCol + 1) * 3; c++) {
+                                if (c != col) {
+                                    for (int r = blockRow * size; r < (blockRow + 1) * size; r++) {
+                                        if (candidates[r][c][value - 1]) {
+                                            System.out.println("Box/Line Reduction(C): " + r + " " + c + " " + value);
+                                            candidates[r][c][value - 1] = false;
+                                            reduceCandidates = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return reduceCandidates;
     }
 
     /**
