@@ -11,23 +11,24 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 
 public class SudokuBoard {
-    private static final int LEVEL = 5; // Quiz level. (1 .. 7)
     private static final int SIZE = 3; // Size of the quiz.
+    private static final int LEVEL = 5; // Quiz level. (1 .. 7)
     private SudokuQuiz quiz = new SudokuQuiz(SIZE, LEVEL);
 
     private final JFrame frame; // The main frame.
     private Cell[][] cells; // Cells of the board.
     private Cell selectedCell = null; // Currently selected cell.
 
-    private Color selectedCellColor = new Color(137, 189, 222); // Sky Blue
-    private Color fixedCellColor = new Color(163, 185, 224); // Day dream
-    private Color editableCellColor = new Color(253, 246, 219); // Pale white lily
+    private final Color selectedCellColor = new Color(137, 189, 222); // Sky Blue
+    private final Color fixedCellColor = new Color(163, 185, 224); // Day dream
+    private final Color editableCellColor = new Color(253, 246, 219); // Pale white lily
 
-    private Color fixedValueColor = Color.BLACK;
-    private Color validValueColor = Color.BLUE;
-    private Color invalidValueColor = Color.RED;
+    private final Color fixedValueColor = Color.BLACK;
+    private final Color validValueColor = Color.BLUE;
+    private final Color invalidValueColor = Color.RED;
 
     public SudokuBoard() {
         frame = new JFrame("Sudoku");
@@ -89,12 +90,23 @@ public class SudokuBoard {
         JPanel numberPanel = new JPanel();
         frame.add(numberPanel, BorderLayout.SOUTH);
 
+        Number[] numbers = new Number[9];
         NumberPanelListener numberPanelListener = new NumberPanelListener();
         for (int i = 1; i <= 9; i++) {
             Number number = new Number(i);
             number.addActionListener(numberPanelListener);
+            numbers[i - 1] = number;
             numberPanel.add(number);
         }
+        Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for (int i = 1; i <= 9; i++) {
+                    numbers[i - 1].setEnabled(quiz.getRemaining(i) > 0);
+                }
+            }
+        });
+        timer.start();
     }
 
     /**
@@ -166,7 +178,7 @@ public class SudokuBoard {
     }
 
     /**
-     * Class for number button.
+     * Class for number buttons.
      */
     class Number extends JButton {
         private final Dimension dimension = new Dimension(40, 40); // size of buttons.
@@ -203,7 +215,7 @@ public class SudokuBoard {
                 SudokuSolver.Hint[] hints = solver.getHints();
 
                 if (hints.length == 0) {
-                    JOptionPane.showMessageDialog(frame, "No hints available.");
+                    JOptionPane.showMessageDialog(frame, "No hints available.", "Hint", JOptionPane.PLAIN_MESSAGE);
                 } else {
                     int row = hints[0].row;
                     int col = hints[0].col;
@@ -223,7 +235,7 @@ public class SudokuBoard {
                 if (quiz.solve()) {
                     updateBoard();
                 } else {
-                    JOptionPane.showMessageDialog(frame, "No solution found.");
+                    JOptionPane.showMessageDialog(frame, "No solution found.", "Solve", JOptionPane.PLAIN_MESSAGE);
                 }
             } else if (command.equals("Reset")) {
                 quiz.resetQuiz();
@@ -279,8 +291,9 @@ public class SudokuBoard {
                 int value = Integer.parseInt(button.getText());
                 boolean possible = quiz.setValue(selectedCell.getRow(), selectedCell.getCol(), value);
                 selectedCell.setValue(value, possible ? validValueColor : invalidValueColor);
-                if (possible && quiz.remaining() == 0) {
-                    JOptionPane.showMessageDialog(null, "Congratulations, you win!");
+                if (possible && quiz.getRemaining() == 0) {
+                    JOptionPane.showMessageDialog(frame, "Congratulations, you win!", "Sudoku",
+                            JOptionPane.PLAIN_MESSAGE);
                 }
             }
         }

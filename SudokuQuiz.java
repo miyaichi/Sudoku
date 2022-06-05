@@ -165,7 +165,7 @@ public class SudokuQuiz {
      * 
      * @return the number of blank cells.
      */
-    public int remaining() {
+    public int getRemaining() {
         int count = size * 3 * size * 3;
         for (int row = 0; row < size * 3; row++) {
             for (int col = 0; col < size * 3; col++) {
@@ -182,7 +182,7 @@ public class SudokuQuiz {
      * 
      * @return the number of blank number.
      */
-    public int remaining(int value) {
+    public int getRemaining(int value) {
         int count = 9;
         for (int row = 0; row < size * 3; row++) {
             for (int col = 0; col < size * 3; col++) {
