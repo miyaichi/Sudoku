@@ -121,17 +121,6 @@ public class SudokuQuiz {
     }
 
     /**
-     * Check if board[row, col] is editable.
-     * 
-     * @param row
-     * @param col
-     * @return true: editable, false: not editable
-     */
-    public boolean isEditable(int row, int col) {
-        return quiz[row][col] == 0;
-    }
-
-    /**
      * Check if board[row, col] is fixed.
      * 
      * @param row

@@ -108,14 +108,14 @@ public class SudokuBoard {
             for (int col = 0; col < cells[row].length; col++) {
                 Cell cell = cells[row][col];
                 int value = quiz.getValue(row, col);
-                if (quiz.isEditable(row, col)) {
-                    cell.setValue(value, validValueColor);
-                    cell.setEnabled(true);
-                    cell.setBackground(editableCellColor);
-                } else {
+                if (quiz.isFixed(row, col)) {
                     cell.setValue(value, fixedValueColor);
                     cell.setEnabled(false);
                     cell.setBackground(fixedCellColor);
+                } else {
+                    cell.setValue(value, validValueColor);
+                    cell.setEnabled(true);
+                    cell.setBackground(editableCellColor);
                 }
             }
         }

@@ -87,14 +87,14 @@ public class Sudoku {
                         if (row < 0 || row > 8 || col < 0 || col > 8 || value < 0 || value > 9) {
                             throw new RuntimeException("Invalid row or column or value");
                         }
-                        if (quiz.isEditable(row, col)) {
+                        if (quiz.isFixed(row, col)) {
+                            System.out.println("row = " + row + " col = " + col + " is fixed.");
+                        } else {
                             boolean valid = quiz.setValue(row, col, value);
                             System.out.println("Set " + row + " " + col + " " + value + " returns " + valid);
                             if (valid && quiz.remaining() == 0) {
                                 System.out.println("Solved!");
                             }
-                        } else {
-                            System.out.println("row = " + row + " col = " + col + " is not editable");
                         }
                     } catch (Exception e) {
                         System.out.println("Usage: set <row> <col> <value>");
