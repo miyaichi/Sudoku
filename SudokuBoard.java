@@ -206,55 +206,60 @@ public class SudokuBoard {
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            String command = e.getActionCommand();
-            if (command.equals("New")) {
-                quiz.newQuiz();
-                updateBoard();
-            } else if (command.equals("Hint")) {
-                SudokuSolver solver = new SudokuSolver(quiz);
-                SudokuSolver.Hint[] hints = solver.getHints();
-
-                if (hints.length == 0) {
-                    JOptionPane.showMessageDialog(frame, "No hints available.", "Hint", JOptionPane.PLAIN_MESSAGE);
-                } else {
-                    int row = hints[0].row;
-                    int col = hints[0].col;
-                    int value = hints[0].value;
-                    boolean possible = quiz.setValue(row, col, value);
-
-                    if (selectedCell != null) {
-                        selectedCell.deselect();
-                        selectedCell = null;
-                    }
-                    Cell cell = cells[row][col];
-                    cell.setValue(value, possible ? validValueColor : invalidValueColor);
-                    cell.select();
-                    selectedCell = cell;
-                }
-            } else if (command.equals("Solve")) {
-                if (quiz.solve()) {
+            switch (e.getActionCommand()) {
+                case "New":
+                    quiz.newQuiz();
                     updateBoard();
-                } else {
-                    JOptionPane.showMessageDialog(frame, "No solution found.", "Solve", JOptionPane.PLAIN_MESSAGE);
-                }
-            } else if (command.equals("Reset")) {
-                quiz.resetQuiz();
-                updateBoard();
-            } else if (command.equals("Undo")) {
-                SudokuQuiz.Operation operation = quiz.undo();
-                if (operation != null) {
-                    if (selectedCell != null) {
-                        selectedCell.deselect();
-                        selectedCell = null;
+                    break;
+                case "Hint":
+                    SudokuSolver solver = new SudokuSolver(quiz);
+                    SudokuSolver.Hint[] hints = solver.getHints();
+
+                    if (hints.length == 0) {
+                        JOptionPane.showMessageDialog(frame, "No hints available.", "Hint", JOptionPane.PLAIN_MESSAGE);
+                    } else {
+                        int row = hints[0].row;
+                        int col = hints[0].col;
+                        int value = hints[0].value;
+                        boolean possible = quiz.setValue(row, col, value);
+
+                        if (selectedCell != null) {
+                            selectedCell.deselect();
+                            selectedCell = null;
+                        }
+                        Cell cell = cells[row][col];
+                        cell.setValue(value, possible ? validValueColor : invalidValueColor);
+                        cell.select();
+                        selectedCell = cell;
                     }
-                    Cell cell = cells[operation.row][operation.col];
-                    cell.setValue(operation.oldValue,
-                            quiz.isPossible(operation.row, operation.col, operation.oldValue)
-                                    ? validValueColor
-                                    : invalidValueColor);
-                    cell.select();
-                    selectedCell = cell;
-                }
+                    break;
+                case "Solve":
+                    if (quiz.solve()) {
+                        updateBoard();
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "No solution found.", "Solve", JOptionPane.PLAIN_MESSAGE);
+                    }
+                    break;
+                case "Reset":
+                    quiz.resetQuiz();
+                    updateBoard();
+                    break;
+                case "Undo":
+                    SudokuQuiz.Operation operation = quiz.undo();
+                    if (operation != null) {
+                        if (selectedCell != null) {
+                            selectedCell.deselect();
+                            selectedCell = null;
+                        }
+                        Cell cell = cells[operation.row][operation.col];
+                        cell.setValue(operation.oldValue,
+                                quiz.isPossible(operation.row, operation.col, operation.oldValue)
+                                        ? validValueColor
+                                        : invalidValueColor);
+                        cell.select();
+                        selectedCell = cell;
+                    }
+                    break;
             }
         }
     }
