@@ -90,13 +90,10 @@ public class SudokuBoard {
         frame.add(numberPanel, BorderLayout.SOUTH);
 
         NumberPanelListener numberPanelListener = new NumberPanelListener();
-        Dimension dimension = new Dimension(40, 40); // size of buttons.
         for (int i = 1; i <= 9; i++) {
-            JButton button = new JButton(String.valueOf(i));
-            button.addActionListener(numberPanelListener);
-            button.setPreferredSize(dimension);
-            button.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 10));
-            numberPanel.add(button);
+            Number number = new Number(i);
+            number.addActionListener(numberPanelListener);
+            numberPanel.add(number);
         }
     }
 
@@ -125,8 +122,8 @@ public class SudokuBoard {
      * Class for Sudoku cells.
      */
     class Cell extends JButton {
-        private Dimension dimension = new Dimension(40, 40); // size of cell.
-        private int row, col; // row and column of cell.
+        private final Dimension dimension = new Dimension(40, 40); // size of cell.
+        private final int row, col; // row and column of cell.
         private int value; // value of cell.
 
         Cell(int row, int col) {
@@ -165,6 +162,26 @@ public class SudokuBoard {
 
         public void deselect() {
             setBackground(editableCellColor);
+        }
+    }
+
+    /**
+     * Class for number button.
+     */
+    class Number extends JButton {
+        private final Dimension dimension = new Dimension(40, 40); // size of buttons.
+        private final int value; // value of button.
+
+        Number(int value) {
+            super(String.valueOf(value));
+            this.value = value;
+
+            setPreferredSize(dimension);
+            setFont(new Font(Font.SANS_SERIF, Font.BOLD, 10));
+        }
+
+        public int getValue() {
+            return value;
         }
     }
 

@@ -69,14 +69,12 @@ public class Sudoku {
                 case "hint":
                     SudokuSolver solver = new SudokuSolver(quiz);
                     SudokuSolver.Hint[] hints = solver.getHints();
-
                     if (hints.length == 0) {
                         System.out.println("No hints.");
                     } else {
-                        for (int i = 0; i < hints.length; i++) {
-                            System.out.println(
-                                    "row: " + hints[i].row + ", col: " + hints[i].col + ", value: " + hints[i].value);
-                        }
+                        System.out.println(
+                                "row: " + hints[0].row + ", col: " + hints[0].col + ", value: " + hints[0].value);
+                        System.out.println("There are other " + (hints.length - 1) + " hints.");
                     }
                     break;
                 case "set":

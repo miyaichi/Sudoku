@@ -271,6 +271,9 @@ class SudokuSolver {
                                 }
                             }
                         }
+                        if (reduceCandidates) {
+                            return true;
+                        }
                     }
 
                     count = ca.length - 1;
@@ -289,6 +292,9 @@ class SudokuSolver {
                                     }
                                 }
                             }
+                        }
+                        if (reduceCandidates) {
+                            return true;
                         }
                     }
 
@@ -317,12 +323,15 @@ class SudokuSolver {
                                 }
                             }
                         }
+                        if (reduceCandidates) {
+                            return true;
+                        }
                     }
                 }
             }
         }
 
-        return reduceCandidates;
+        return false;
     }
 
     /**
@@ -368,6 +377,9 @@ class SudokuSolver {
                             }
                         }
                     }
+                    if (reduceCandidates) {
+                        return true;
+                    }
                 }
             }
         }
@@ -405,11 +417,14 @@ class SudokuSolver {
                             }
                         }
                     }
+                    if (reduceCandidates) {
+                        return true;
+                    }
                 }
             }
         }
 
-        return reduceCandidates;
+        return false;
     }
 
     /**
