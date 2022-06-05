@@ -169,7 +169,7 @@ public class SudokuQuiz {
         int count = size * 3 * size * 3;
         for (int row = 0; row < size * 3; row++) {
             for (int col = 0; col < size * 3; col++) {
-                if (board[row][col] == 0) {
+                if (board[row][col] != 0) {
                     count--;
                 }
             }
