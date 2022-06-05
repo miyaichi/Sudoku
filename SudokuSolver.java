@@ -3,7 +3,7 @@ import java.util.Arrays;
 import java.util.List;
 
 class SudokuSolver {
-    private int size; // Quiz size.
+    private final int size; // Quiz size.
     private int[][] quiz; // Sudoku quiz.
     private int[][] board; // Quiz board.
     private boolean[][][] candidates; // candidates[row][col][value - 1] = true if value is a candidate for (row,

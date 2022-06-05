@@ -2,8 +2,8 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class SudokuQuiz {
-    private int level; // Quiz level. (1 .. 7)
-    private int size; // Quiz size.
+    private final int level; // Quiz level. (1 .. 7)
+    private final int size; // Quiz size.
     private int[][] quiz; // Sudoku quiz.
     private int[][] board; // Current sudoku board.
     private Deque<Operation> operations; // List of operations.
