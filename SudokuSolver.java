@@ -14,12 +14,10 @@ class SudokuSolver {
         this.quiz = quiz.getQuiz();
         this.board = quiz.cloneBoard(quiz.getBoard());
 
-        candidates = new boolean[size * 3][size * 3][9];
+        candidates = new boolean[size * 3][size * 3][];
         for (int row = 0; row < size * 3; row++) {
             for (int col = 0; col < size * 3; col++) {
-                for (int value = 1; value <= 9; value++) {
-                    candidates[row][col][value - 1] = true;
-                }
+                candidates[row][col] = new boolean[] { true, true, true, true, true, true, true, true, true };
             }
         }
         for (int row = 0; row < size * 3; row++) {
