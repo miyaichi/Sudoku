@@ -101,8 +101,9 @@ public class SudokuBoard {
         Timer timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                int[] reminings = quiz.getRemainings();
                 for (int i = 1; i <= 9; i++) {
-                    numbers[i - 1].setEnabled(quiz.getRemaining(i) > 0);
+                    numbers[i - 1].setEnabled(reminings[i - 1] != 0);
                 }
             }
         });
@@ -214,7 +215,6 @@ public class SudokuBoard {
                 case "Hint":
                     SudokuSolver solver = new SudokuSolver(quiz);
                     SudokuSolver.Hint[] hints = solver.getHints();
-
                     if (hints.length == 0) {
                         JOptionPane.showMessageDialog(frame, "No hints available.", "Hint", JOptionPane.PLAIN_MESSAGE);
                     } else {

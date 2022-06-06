@@ -180,18 +180,18 @@ public class SudokuQuiz {
     /**
      * Remaining blank number.
      * 
-     * @return the number of blank number.
+     * @return remaining blank number per number.
      */
-    public int getRemaining(int value) {
-        int count = 9;
+    public int[] getRemainings() {
+        int[] remainings = new int[] { 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9 };
         for (int row = 0; row < size * 3; row++) {
             for (int col = 0; col < size * 3; col++) {
-                if (board[row][col] == value) {
-                    count--;
+                if (board[row][col] != 0) {
+                    remainings[board[row][col] - 1]--;
                 }
             }
         }
-        return count;
+        return remainings;
     }
 
     /**
