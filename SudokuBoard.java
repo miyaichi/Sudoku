@@ -292,12 +292,12 @@ public class SudokuBoard {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (selectedCell != null) {
-                JButton button = (JButton) e.getSource();
-                int value = Integer.parseInt(button.getText());
+                Number number = (Number) e.getSource();
+                int value = number.getValue();
                 boolean possible = quiz.setValue(selectedCell.getRow(), selectedCell.getCol(), value);
                 selectedCell.setValue(value, possible ? validValueColor : invalidValueColor);
                 if (possible && quiz.getRemaining() == 0) {
-                    JOptionPane.showMessageDialog(frame, "Congratulations, you win!", "Sudoku",
+                    JOptionPane.showMessageDialog(frame, "Congratuation, you solved the quiz!", "Sudoku",
                             JOptionPane.PLAIN_MESSAGE);
                 }
             }
