@@ -10,7 +10,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
 public class SudokuBoard {
@@ -22,9 +21,9 @@ public class SudokuBoard {
     private Cell[][] cells; // Cells of the board.
     private Cell selectedCell = null; // Currently selected cell.
 
-    private final Color selectedCellColor = new Color(137, 189, 222); // Sky Blue
-    private final Color fixedCellColor = new Color(163, 185, 224); // Day dream
-    private final Color editableCellColor = new Color(253, 246, 219); // Pale white lily
+    private final Color selectedCellColor = new Color(135, 206, 250); // Light skyblue
+    private final Color fixedCellColor = new Color(149, 186, 238); // Blue onix
+    private final Color editableCellColor = new Color(250, 250, 210); // Light goldenrod yellow
 
     private final Color fixedValueColor = Color.BLACK;
     private final Color validValueColor = Color.BLUE;
@@ -144,7 +143,6 @@ public class SudokuBoard {
             this.col = col;
             this.value = 0;
 
-            setHorizontalAlignment(SwingConstants.CENTER);
             setBorder(BorderFactory.createLineBorder(Color.GRAY));
             setPreferredSize(dimension);
             setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
@@ -190,7 +188,7 @@ public class SudokuBoard {
             this.value = value;
 
             setPreferredSize(dimension);
-            setFont(new Font(Font.SANS_SERIF, Font.BOLD, 10));
+            setFont(new Font(Font.SANS_SERIF, Font.BOLD, 12));
         }
 
         public int getValue() {
