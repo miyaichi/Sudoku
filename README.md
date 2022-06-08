@@ -118,7 +118,7 @@ classDiagram
     CommandPanelListener : +actionPerformed()
     BoardPanelListener --|> Cell
     BoardPanelListener : +actionPerformed()
-    Cell --:> Sudokuboard
+    Cell --|> Sudokuboard
     NumberPanelListener --|> Number
     NumberPanelListener : +actionPerformed()
     Number --|> Sudokuboard
