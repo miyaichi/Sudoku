@@ -116,22 +116,10 @@ classDiagram
     SudokuSolver : +getHints()
     CommandPanelListener --|> SudokuBoard
     CommandPanelListener : +actionPerformed()
-    BoardPanelListener --|> Cell
+    BoardPanelListener --|> SudokuBoard
     BoardPanelListener : +actionPerformed()
-    Cell --|> SudokuBoard
-    Cell : -cell
-    Cell : -row
-    Cell : -col
-    Cell : +getRow()
-    Cell : +getCol()
-    Cell : +getValue()
-    Cell : +setValue()
-    Cell : +select()
-    Cell : +unselect()
-    NumberPanelListener --|> Number
+    NumberPanelListener --|> SudokuBoard
     NumberPanelListener : +actionPerformed()
-    Number --|> SudokuBoard
-    Number : +getValue()
 ```
 
 ## To-Do:
