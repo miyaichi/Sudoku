@@ -92,6 +92,36 @@ It implemented the following solver strategies.
 
   候補が行や列に 2 ～ 3 回しか登場せず、すべて同じブロックにある場合、候補を減らすことができる。
 
+## Class diagram
+
+A rough class diagram is as follows:
+
+```mermaid
+classDiagram
+    SudokuBoard --|> SudokuQuiz
+    SudokuBoard : -quiz
+    SudokuBoard : -board
+    SudokuBoard : -cells
+    SudokuBoard : -numbers
+    SudokuQuiz : -quiz
+    SudokuQuiz : -board
+    SudokuQuiz : +setValue()
+    SudokuQuiz : +newQuiz()
+    SudokuQuiz : +resetQuiz()
+    SudokuQuiz : +solve()
+    SudokuQuiz : +undo()
+    SudokuBoard --|> SudokuSolver
+    SudokuSolver : -quiz
+    SudokuSolver : -board
+    SudokuSolver : +getHint()
+    CommandPanelListener --|> SudokuBoard
+    CommandPanelListener : +actionPerformed()
+    BoardPanelListener --|> SudokuBoard
+    BoardPanelListener : +actionPerformed()
+    NumberPanelListener --|> SudokuBoard
+    NumberPanelListener : +actionPerformed()
+```
+
 ## To-Do:
 
 - Animation during solving - In the Solve function, I wanted to use backtracking to show the step-by-step process of finding the goal. However, I could not effectively implement the ActionListener function to display the animation.
