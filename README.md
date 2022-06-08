@@ -119,9 +119,19 @@ classDiagram
     BoardPanelListener --|> Cell
     BoardPanelListener : +actionPerformed()
     Cell --|> SudokuBoard
+    Cell : -cell
+    Cell : -row
+    Cell : -col
+    Cell : +getRow()
+    Cell : +getCol()
+    Cell : +getValue()
+    Cell : +setValue()
+    Cell : +select()
+    Cell : +unselect()
     NumberPanelListener --|> Number
     NumberPanelListener : +actionPerformed()
     Number --|> SudokuBoard
+    Number : +getValue()
 ```
 
 ## To-Do:

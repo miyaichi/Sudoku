@@ -171,7 +171,7 @@ public class SudokuBoard {
             setBackground(selectedCellColor);
         }
 
-        public void deselect() {
+        public void unselect() {
             setBackground(editableCellColor);
         }
     }
@@ -222,7 +222,7 @@ public class SudokuBoard {
                         boolean possible = quiz.setValue(row, col, value);
 
                         if (selectedCell != null) {
-                            selectedCell.deselect();
+                            selectedCell.unselect();
                             selectedCell = null;
                         }
                         Cell cell = cells[row][col];
@@ -246,7 +246,7 @@ public class SudokuBoard {
                     SudokuQuiz.Operation operation = quiz.undo();
                     if (operation != null) {
                         if (selectedCell != null) {
-                            selectedCell.deselect();
+                            selectedCell.unselect();
                             selectedCell = null;
                         }
                         Cell cell = cells[operation.row][operation.col];
@@ -272,7 +272,7 @@ public class SudokuBoard {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (selectedCell != null) {
-                selectedCell.deselect();
+                selectedCell.unselect();
             }
             Cell cell = (Cell) e.getSource();
             cell.select();
