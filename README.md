@@ -113,13 +113,15 @@ classDiagram
     SudokuBoard --|> SudokuSolver
     SudokuSolver : -quiz
     SudokuSolver : -board
-    SudokuSolver : +getHint()
+    SudokuSolver : +getHints()
     CommandPanelListener --|> SudokuBoard
     CommandPanelListener : +actionPerformed()
-    BoardPanelListener --|> SudokuBoard
+    BoardPanelListener --|> Cell
     BoardPanelListener : +actionPerformed()
-    NumberPanelListener --|> SudokuBoard
+    Cell --:> Sudokuboard
+    NumberPanelListener --|> Number
     NumberPanelListener : +actionPerformed()
+    Number --|> Sudokuboard
 ```
 
 ## To-Do:
