@@ -75,7 +75,6 @@ public class SudokuBoard {
                     }
                 }
             });
-
             commandPanel.add(button);
         }
 
@@ -129,7 +128,7 @@ public class SudokuBoard {
             numberPanel.add(number);
         }
 
-        Timer timer = new Timer(1000, new ActionListener() {
+        Timer timer = new Timer(500, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int[] reminings = quiz.getRemainings();
@@ -230,11 +229,13 @@ public class SudokuBoard {
      * @param col the column of the cell.
      */
     public void selectCell(int row, int col) {
-        if (selectedCell != null) {
-            selectedCell.unselect();
+        if (!quiz.isFixed(row, col)) {
+            if (selectedCell != null) {
+                selectedCell.unselect();
+            }
+            selectedCell = cells[row][col];
+            selectedCell.select();
         }
-        selectedCell = cells[row][col];
-        selectedCell.select();
     }
 
     /**
@@ -243,7 +244,7 @@ public class SudokuBoard {
      * @param value the value to set.
      */
     public void setValue(int value) {
-        if (selectedCell != null) {
+        if (selectedCell != null && 1 <= value && value <= 9) {
             boolean possible = quiz.setValue(selectedCell.getRow(), selectedCell.getCol(), value);
             selectedCell.setValue(value, possible ? validValueColor : invalidValueColor);
             if (possible && quiz.getRemaining() == 0) {

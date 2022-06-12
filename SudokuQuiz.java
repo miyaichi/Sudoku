@@ -88,13 +88,13 @@ public class SudokuQuiz {
      * @param value
      */
     public boolean setValue(int row, int col, int value) {
-        if (isFixed(row, col)) {
-            return false;
+        if (!isFixed(row, col) && value >= 1 && value <= 9) {
+            boolean possible = isPossible(row, col, value);
+            operations.add(new Operation(row, col, board[row][col], value));
+            board[row][col] = value;
+            return possible;
         }
-        boolean possible = isPossible(row, col, value);
-        operations.add(new Operation(row, col, board[row][col], value));
-        board[row][col] = value;
-        return possible;
+        return false;
     }
 
     /**
@@ -128,7 +128,10 @@ public class SudokuQuiz {
      * @return true: fixed, false: editable.
      */
     public boolean isFixed(int row, int col) {
-        return quiz[row][col] != 0;
+        if (0 <= row && row < size * 3 && 0 <= col && col < size * 3) {
+            return quiz[row][col] != 0;
+        }
+        return true;
     }
 
     /**
@@ -143,21 +146,24 @@ public class SudokuQuiz {
     }
 
     public boolean isPossible(int[][] board, int row, int col, int value) {
-        for (int i = 0; i < size * 3; i++) {
-            if (board[row][i] == value || board[i][col] == value) {
-                return false;
-            }
-        }
-        int rowStart = row / 3 * 3;
-        int colStart = col / 3 * 3;
-        for (int i = rowStart; i < rowStart + 3; i++) {
-            for (int j = colStart; j < colStart + 3; j++) {
-                if (board[i][j] == value) {
+        if (!isFixed(row, col) && value >= 1 && value <= 9) {
+            for (int i = 0; i < size * 3; i++) {
+                if (board[row][i] == value || board[i][col] == value) {
                     return false;
                 }
             }
+            int rowStart = row / 3 * 3;
+            int colStart = col / 3 * 3;
+            for (int i = rowStart; i < rowStart + 3; i++) {
+                for (int j = colStart; j < colStart + 3; j++) {
+                    if (board[i][j] == value) {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
