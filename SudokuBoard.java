@@ -173,7 +173,7 @@ public class SudokuBoard {
      * Resets the quiz.
      */
     public void resetQuiz() {
-        quiz.newQuiz();
+        quiz.resetQuiz();
         updateBoard();
     }
 
