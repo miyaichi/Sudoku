@@ -9,6 +9,9 @@ public class SudokuQuiz {
     private Deque<Operation> operations; // List of operations.
 
     public SudokuQuiz(int size, int level) {
+        if (level < 1 && level > 7) {
+            throw new IllegalArgumentException("Level must be between 1 and 7.");
+        }
         this.size = size;
         this.level = level;
         quiz = new int[size * 3][size * 3];
@@ -26,8 +29,18 @@ public class SudokuQuiz {
     }
 
     public void dumpBoard(int[][] board) {
-        System.out.println("-------------------");
-        System.out.println("  0 1 2 3 4 5 6 7 8");
+        String border;
+        border = " ";
+        for (int i = 0; i < size * 3; i++) {
+            border += "--";
+        }
+        System.out.println(border);
+        border = " ";
+        for (int i = 0; i < size * 3; i++) {
+            border += " " + (i % 10);
+        }
+        System.out.println(border);
+
         for (int row = 0; row < board.length; row++) {
             System.out.print(row + " ");
             for (int col = 0; col < board[row].length; col++) {
@@ -36,7 +49,6 @@ public class SudokuQuiz {
             }
             System.out.println();
         }
-        System.out.println("-------------------");
     }
 
     /**
