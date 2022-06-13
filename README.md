@@ -99,10 +99,17 @@ A rough class diagram is as follows:
 ```mermaid
 classDiagram
     SudokuBoard --|> SudokuQuiz
-    SudokuBoard : -quiz
     SudokuBoard : -board
     SudokuBoard : -cells
     SudokuBoard : -numbers
+    SudokuBoard : -quiz
+    SudokuBoard : +hint()
+    SudokuBoard : +newQuiz()
+    SudokuBoard : +resetQuiz()
+    SudokuBoard : +setCell()
+    SudokuBoard : +setValue()
+    SudokuBoard : +solveQuiz()
+    SudokuBoard : +undo()
     SudokuQuiz : -quiz
     SudokuQuiz : -board
     SudokuQuiz : +setValue()
