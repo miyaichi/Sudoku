@@ -199,12 +199,13 @@ public class SudokuBoard {
      */
     public void solveQuiz() {
         if (!solving) { // Only one thread can solve at a time.
+            SudokuSolver solver = new SudokuSolver(quiz);
+            SudokuSolver.Hint[] hints = solver.getHints();
+
             solving = true;
             Thread thread = new Thread() {
                 @Override
                 public void run() {
-                    SudokuSolver solver = new SudokuSolver(quiz);
-                    SudokuSolver.Hint[] hints = solver.getHints();
                     for (SudokuSolver.Hint hint : hints) {
                         if (quiz.isFixed(hint.row, hint.col) || !quiz.isPossible(hint.row, hint.col, hint.value)) {
                             break; // Someone changed the quiz.
