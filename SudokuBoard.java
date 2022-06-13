@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 public class SudokuBoard {
@@ -20,6 +21,8 @@ public class SudokuBoard {
     private final JFrame frame; // The main frame.
     private Cell[][] cells; // Cells of the board.
     private Cell selectedCell = null; // Currently selected cell.
+
+    private boolean solving = false; // Only one can solve at a time.
 
     private final Color selectedCellColor = new Color(135, 206, 250); // Light skyblue
     private final Color fixedCellColor = new Color(149, 186, 238); // Blue onix
@@ -195,10 +198,43 @@ public class SudokuBoard {
      * Solves the quiz.
      */
     public void solveQuiz() {
-        if (quiz.solve()) {
-            updateBoard();
-        } else {
-            JOptionPane.showMessageDialog(frame, "No solution found.", "Solve", JOptionPane.PLAIN_MESSAGE);
+        if (!solving) { // Only one thread can solve at a time.
+            solving = true;
+            Thread thread = new Thread() {
+                @Override
+                public void run() {
+                    SudokuSolver solver = new SudokuSolver(quiz);
+                    SudokuSolver.Hint[] hints = solver.getHints();
+                    for (SudokuSolver.Hint hint : hints) {
+                        if (quiz.isFixed(hint.row, hint.col) || !quiz.isPossible(hint.row, hint.col, hint.value)) {
+                            break; // Someone changed the quiz.
+                        }
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                selectCell(hint.row, hint.col);
+                                setValue(hint.value);
+                            }
+                        });
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (quiz.getRemaining() > 0) {
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                JOptionPane.showMessageDialog(frame, "Can’t solve it any more.", "Solve",
+                                        JOptionPane.PLAIN_MESSAGE);
+                            }
+                        });
+                    }
+                    solving = false;
+                }
+            };
+            thread.start();
         }
     }
 

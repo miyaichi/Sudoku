@@ -88,7 +88,6 @@ class SudokuSolver {
             break;
         }
 
-        dumpCandidates();
         return hints.toArray(new Hint[hints.size()]);
     }
 
