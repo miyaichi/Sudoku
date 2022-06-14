@@ -67,17 +67,28 @@ public class Sudoku {
                     quiz.resetQuiz();
                     break;
                 case "solve":
-                    quiz.solve();
+                    if (quiz.getRemaining() > 0) {
+                        SudokuSolver solver = new SudokuSolver(quiz);
+                        SudokuSolver.Hint[] hints = solver.getHints();
+                        for (SudokuSolver.Hint hint : hints) {
+                            quiz.setValue(hint.row, hint.col, hint.value);
+                        }
+                        if (quiz.getRemaining() > 0) {
+                            System.out.println("Can’t solve it any more.");
+                        }
+                    }
                     break;
                 case "hint":
-                    SudokuSolver solver = new SudokuSolver(quiz);
-                    SudokuSolver.Hint[] hints = solver.getHints();
-                    if (hints.length == 0) {
-                        System.out.println("No hints.");
-                    } else {
-                        System.out.println(
-                                "row: " + hints[0].row + ", col: " + hints[0].col + ", value: " + hints[0].value);
-                        System.out.println("There are other " + (hints.length - 1) + " hints.");
+                    if (quiz.getRemaining() > 0) {
+                        SudokuSolver solver = new SudokuSolver(quiz);
+                        SudokuSolver.Hint[] hints = solver.getHints();
+                        if (hints.length == 0) {
+                            System.out.println("No hints.");
+                        } else {
+                            System.out.println(
+                                    "row: " + hints[0].row + ", col: " + hints[0].col + ", value: " + hints[0].value);
+                            System.out.println("There are other " + (hints.length - 1) + " hints.");
+                        }
                     }
                     break;
                 case "set":

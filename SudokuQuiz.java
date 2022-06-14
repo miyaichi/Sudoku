@@ -271,16 +271,9 @@ public class SudokuQuiz {
     /**
      * Solve the board with backtracking.
      * 
+     * @param board The current board.
      * @return true: solved, false: cannot solve.
      */
-    public boolean solve() {
-        boolean solved = solve(board);
-        if (solved) {
-            operations.clear();
-        }
-        return solved;
-    }
-
     public boolean solve(int[][] board) {
         for (int row = 0; row < size * 3; row++) {
             for (int col = 0; col < size * 3; col++) {
