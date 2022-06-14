@@ -21,8 +21,6 @@ public class SudokuQuiz {
 
     /**
      * A utility function to print the board
-     * 
-     * @param board
      */
     public void dumpBoard() {
         dumpBoard(board);
@@ -54,7 +52,7 @@ public class SudokuQuiz {
     /**
      * Get the quiz size.
      * 
-     * @return
+     * @return The quiz size.
      */
     public int getSize() {
         return size;
@@ -63,7 +61,7 @@ public class SudokuQuiz {
     /**
      * Get current quiz.
      * 
-     * @return quiz
+     * @return quiz The quiz.
      */
     public int[][] getQuiz() {
         return quiz;
@@ -72,7 +70,7 @@ public class SudokuQuiz {
     /**
      * Get current board.
      * 
-     * @return board
+     * @return board The board.
      */
     public int[][] getBoard() {
         return board;
@@ -81,8 +79,8 @@ public class SudokuQuiz {
     /**
      * Clone the board.
      * 
-     * @param board
-     * @return
+     * @param board The board to clone.
+     * @return The cloned board.
      */
     public int[][] cloneBoard(int[][] board) {
         int[][] clone = new int[board.length][];
@@ -95,9 +93,10 @@ public class SudokuQuiz {
     /**
      * Set value on the board.
      * 
-     * @param row
-     * @param col
-     * @param value
+     * @param row   The row.
+     * @param col   The column.
+     * @param value The value of the cell.
+     * @return True if the value is valid.
      */
     public boolean setValue(int row, int col, int value) {
         if (!isFixed(row, col) && value >= 1 && value <= 9) {
@@ -112,9 +111,9 @@ public class SudokuQuiz {
     /**
      * Get value of board.
      * 
-     * @param row
-     * @param col
-     * @return
+     * @param row The row.
+     * @param col The column.
+     * @return The value of the cell.
      */
     public int getValue(int row, int col) {
         return board[row][col];
@@ -122,6 +121,8 @@ public class SudokuQuiz {
 
     /**
      * Undo the last operation.
+     * 
+     * @return The last operation.
      */
     public Operation undo() {
         if (operations.isEmpty()) {
@@ -135,8 +136,8 @@ public class SudokuQuiz {
     /**
      * Check if board[row, col] is fixed.
      * 
-     * @param row
-     * @param col
+     * @param row The row.
+     * @param col The column.
      * @return true: fixed, false: editable.
      */
     public boolean isFixed(int row, int col) {
@@ -149,9 +150,10 @@ public class SudokuQuiz {
     /**
      * Check if value is possible to put in the board[row, col].
      * 
-     * @param row
-     * @param col
-     * @param value
+     * @param row   The row.
+     * @param col   The column.
+     * @param value The value.
+     * @return true: possible, false: not possible.
      */
     public boolean isPossible(int row, int col, int value) {
         return isPossible(board, row, col, value);

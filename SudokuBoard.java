@@ -14,9 +14,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 public class SudokuBoard {
-    private static final int SIZE = 3; // Size of the quiz.
-    private static final int LEVEL = 5; // Quiz level. (1 .. 7)
-    private SudokuQuiz quiz = new SudokuQuiz(SIZE, LEVEL);
+    private final int size; // Size of the quiz.
+    private final int level; // Quiz level. (1 .. 7)
+    private SudokuQuiz quiz; // Quiz.
 
     private final JFrame frame; // The main frame.
     private Cell[][] cells; // Cells of the board.
@@ -32,16 +32,24 @@ public class SudokuBoard {
     private final Color validValueColor = Color.BLUE;
     private final Color invalidValueColor = Color.RED;
 
-    public SudokuBoard() {
+    /**
+     * Constructor.
+     * 
+     * @param size  Size of the quiz.
+     * @param level Quiz level. (1 .. 7)
+     */
+    public SudokuBoard(int size, int level) {
+        this.size = size;
+        this.level = level;
+        this.quiz = new SudokuQuiz(this.size, this.level);
+
         frame = new JFrame("Sudoku");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
 
         buildFrame();
-
-        quiz.newQuiz();
-        updateBoard();
+        newQuiz();
 
         frame.pack();
         frame.setVisible(true);
@@ -82,11 +90,11 @@ public class SudokuBoard {
         }
 
         JPanel boardPanel = new JPanel();
-        boardPanel.setLayout(new GridLayout(SIZE, SIZE, GAP, GAP));
+        boardPanel.setLayout(new GridLayout(size, size, GAP, GAP));
         boardPanel.setBorder(BorderFactory.createEmptyBorder(GAP, GAP, GAP, GAP));
         frame.add(boardPanel, BorderLayout.CENTER);
 
-        JPanel[][] blocks = new JPanel[SIZE][SIZE];
+        JPanel[][] blocks = new JPanel[size][size];
         for (int row = 0; row < blocks.length; row++) {
             for (int col = 0; col < blocks[row].length; col++) {
                 JPanel block = new JPanel();
@@ -98,7 +106,7 @@ public class SudokuBoard {
             }
         }
 
-        cells = new Cell[SIZE * 3][SIZE * 3];
+        cells = new Cell[size * 3][size * 3];
         for (int row = 0; row < cells.length; row++) {
             for (int col = 0; col < cells[row].length; col++) {
                 Cell cell = new Cell(row, col);
@@ -144,9 +152,9 @@ public class SudokuBoard {
     }
 
     /**
-     * Updates the board with the current state of the quiz.
+     * Set the board with the current quiz.
      */
-    private void updateBoard() {
+    private void setBoard() {
         for (int row = 0; row < cells.length; row++) {
             for (int col = 0; col < cells[row].length; col++) {
                 Cell cell = cells[row][col];
@@ -162,6 +170,7 @@ public class SudokuBoard {
                 }
             }
         }
+        selectedCell = null;
     }
 
     /**
@@ -169,7 +178,7 @@ public class SudokuBoard {
      */
     public void newQuiz() {
         quiz.newQuiz();
-        updateBoard();
+        setBoard();
     }
 
     /**
@@ -177,7 +186,7 @@ public class SudokuBoard {
      */
     public void resetQuiz() {
         quiz.resetQuiz();
-        updateBoard();
+        setBoard();
     }
 
     /**
@@ -294,7 +303,7 @@ public class SudokuBoard {
     /**
      * Class for Sudoku cells.
      */
-    class Cell extends JButton {
+    private class Cell extends JButton {
         private final Dimension dimension = new Dimension(40, 40); // size of cell.
         private final int row, col; // row and column of cell.
         private int value; // value of cell.
@@ -318,10 +327,6 @@ public class SudokuBoard {
             return col;
         }
 
-        public int getValue() {
-            return value;
-        }
-
         public void setValue(int value, Color color) {
             this.value = value;
             setForeground(color);
@@ -340,7 +345,7 @@ public class SudokuBoard {
     /**
      * Class for number buttons.
      */
-    class Number extends JButton {
+    private class Number extends JButton {
         private final Dimension dimension = new Dimension(40, 40); // size of buttons.
         private final int value; // value of button.
 

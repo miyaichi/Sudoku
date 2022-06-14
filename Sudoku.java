@@ -5,6 +5,8 @@ public class Sudoku {
         final String usage = "Usage: java Sudoku [repl | swing]\n" +
                 "  repl: run in cui repl mode\n" +
                 "  swing: run in gui swing mode";
+        final int level = 5; // Quiz level. (1 .. 7)
+        final int size = 3; // Size of the quiz.
 
         if (argv.length != 1) {
             System.out.println(usage);
@@ -12,13 +14,13 @@ public class Sudoku {
         }
         switch (argv[0]) {
             case "repl":
-                repl();
+                repl(size, level);
                 break;
             case "swing":
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        new SudokuBoard();
+                        new SudokuBoard(size, level);
                     }
                 });
                 break;
@@ -30,10 +32,11 @@ public class Sudoku {
 
     /**
      * Sudoku repl mode.
+     * 
+     * @param size  The size of the quiz.
+     * @param level The level of the quiz.
      */
-    static public void repl() {
-        final int LEVEL = 5; // Quiz level. (1 .. 7)
-        final int SIZE = 3; // Size of the quiz.
+    static public void repl(int size, int level) {
         final String PROMPT = "> ";
         final String help = "Available commands:\n" +
                 " 1. new\n" +
@@ -44,7 +47,7 @@ public class Sudoku {
                 " 6. undo\n" +
                 " 7. quit\n";
 
-        SudokuQuiz quiz = new SudokuQuiz(SIZE, LEVEL);
+        SudokuQuiz quiz = new SudokuQuiz(size, level);
         quiz.newQuiz();
         while (true) {
             int row, col, value;

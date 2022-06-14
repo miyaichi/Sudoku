@@ -9,6 +9,11 @@ class SudokuSolver {
     private boolean[][][] candidates; // candidates[row][col][value - 1] = true if value is a candidate for (row,
                                       // col).
 
+    /**
+     * Constructor.
+     * 
+     * @param quiz The quiz.
+     */
     public SudokuSolver(SudokuQuiz quiz) {
         this.size = quiz.getSize();
         this.quiz = quiz.getQuiz();
@@ -94,9 +99,9 @@ class SudokuSolver {
     /**
      * Get the candidates for the cell.
      * 
-     * @param row
-     * @param col
-     * @return candidates
+     * @param row The row of the cell.
+     * @param col The column of the cell.
+     * @return candidates Candidates for the cell.
      */
     private int[] getCandidates(int row, int col) {
         int count = 0;
@@ -119,9 +124,9 @@ class SudokuSolver {
     /**
      * Fix the candidate for the cell.
      * 
-     * @param row
-     * @param col
-     * @param value
+     * @param row   The row of the cell.
+     * @param col   The column of the cell.
+     * @param value The candidate value.
      */
     private void fixCandidate(int row, int col, int value) {
         for (int v = 1; v <= 9; v++) {
