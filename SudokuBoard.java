@@ -259,7 +259,6 @@ public class SudokuBoard {
                     quiz.isPossible(operation.row, operation.col, operation.oldValue)
                             ? validValueColor
                             : invalidValueColor);
-
             if (selectedCell != null) {
                 selectedCell.unselect();
             }
