@@ -254,17 +254,17 @@ public class SudokuBoard {
     public void undo() {
         SudokuQuiz.Operation operation = quiz.undo();
         if (operation != null) {
-            if (selectedCell != null) {
-                selectedCell.unselect();
-                selectedCell = null;
-            }
             Cell cell = cells[operation.row][operation.col];
             cell.setValue(operation.oldValue,
                     quiz.isPossible(operation.row, operation.col, operation.oldValue)
                             ? validValueColor
                             : invalidValueColor);
-            cell.select();
+
+            if (selectedCell != null) {
+                selectedCell.unselect();
+            }
             selectedCell = cell;
+            selectedCell.select();
         }
     }
 
