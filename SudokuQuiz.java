@@ -1,4 +1,5 @@
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Deque;
 
 public class SudokuQuiz {
@@ -200,7 +201,8 @@ public class SudokuQuiz {
      * @return remaining blank number per number.
      */
     public int[] getRemainings() {
-        int[] remainings = new int[] { 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9 };
+        int[] remainings = new int[9];
+        Arrays.fill(remainings, size * size);
         for (int row = 0; row < size * 3; row++) {
             for (int col = 0; col < size * 3; col++) {
                 if (board[row][col] != 0) {
