@@ -59,30 +59,27 @@ public class SudokuQuiz {
     }
 
     /**
-     * Get current quiz.
+     * Get a copy of the current quiz.
      * 
      * @return quiz The quiz.
      */
     public int[][] getQuiz() {
-        return quiz;
+        return deepCopy(quiz);
     }
 
     /**
-     * Get current board.
+     * Get a copy of the current board.
      * 
      * @return board The board.
      */
     public int[][] getBoard() {
-        return board;
+        return deepCopy(board);
     }
 
     /**
-     * Clone the board.
-     * 
-     * @param board The board to clone.
-     * @return The cloned board.
+     * Clone the quiz or board.
      */
-    public int[][] cloneBoard(int[][] board) {
+    private int[][] deepCopy(int[][] board) {
         int[][] clone = new int[board.length][];
         for (int i = 0; i < board.length; i++) {
             clone[i] = board[i].clone();
@@ -159,7 +156,7 @@ public class SudokuQuiz {
         return isPossible(board, row, col, value);
     }
 
-    public boolean isPossible(int[][] board, int row, int col, int value) {
+    private boolean isPossible(int[][] board, int row, int col, int value) {
         if (!isFixed(row, col) && value >= 1 && value <= 9) {
             for (int i = 0; i < size * 3; i++) {
                 if (board[row][i] == value || board[i][col] == value) {
@@ -218,7 +215,7 @@ public class SudokuQuiz {
      * Reset the board to the quiz.
      */
     public void resetQuiz() {
-        board = cloneBoard(quiz);
+        board = deepCopy(quiz);
         operations.clear();
     }
 
@@ -259,12 +256,12 @@ public class SudokuQuiz {
             }
 
             // Make sure the quiz is solvable, and if not, try again.
-            if (solve(cloneBoard(quiz))) {
+            if (solve(deepCopy(quiz))) {
                 break;
             }
         }
 
-        board = cloneBoard(quiz);
+        board = deepCopy(quiz);
         operations.clear();
     }
 
@@ -274,7 +271,7 @@ public class SudokuQuiz {
      * @param board The current board.
      * @return true: solved, false: cannot solve.
      */
-    public boolean solve(int[][] board) {
+    private boolean solve(int[][] board) {
         for (int row = 0; row < size * 3; row++) {
             for (int col = 0; col < size * 3; col++) {
                 if (board[row][col] == 0) {

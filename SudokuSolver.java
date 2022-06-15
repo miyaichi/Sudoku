@@ -17,7 +17,7 @@ class SudokuSolver {
     public SudokuSolver(SudokuQuiz quiz) {
         this.size = quiz.getSize();
         this.quiz = quiz.getQuiz();
-        this.board = quiz.cloneBoard(quiz.getBoard());
+        this.board = quiz.getBoard();
 
         candidates = new boolean[size * 3][size * 3][];
         for (int row = 0; row < size * 3; row++) {
