@@ -80,10 +80,10 @@ public class SudokuQuiz {
     /**
      * Clone the quiz or board.
      */
-    private int[][] deepCopy(int[][] board) {
-        int[][] clone = new int[board.length][];
-        for (int i = 0; i < board.length; i++) {
-            clone[i] = board[i].clone();
+    private int[][] deepCopy(int[][] matrix) {
+        int[][] clone = new int[matrix.length][];
+        for (int i = 0; i < matrix.length; i++) {
+            clone[i] = matrix[i].clone();
         }
         return clone;
     }
@@ -184,12 +184,11 @@ public class SudokuQuiz {
      * @return the number of blank cells.
      */
     public int getRemaining() {
-        int count = size * 3 * size * 3;
-        for (int row = 0; row < size * 3; row++) {
-            for (int col = 0; col < size * 3; col++) {
-                if (board[row][col] != 0) {
-                    count--;
-                }
+        int[] remainings = getRemainings();
+        int count = 0;
+        for (int value = 1; value <= 9; value++) {
+            if (remainings[value - 1] > 0) {
+                count++;
             }
         }
         return count;

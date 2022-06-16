@@ -96,7 +96,7 @@ public class Sudoku {
                         row = Integer.parseInt(tokens[1]);
                         col = Integer.parseInt(tokens[2]);
                         value = Integer.parseInt(tokens[3]);
-                        if (row < 0 || row > 8 || col < 0 || col > 8 || value < 0 || value > 9) {
+                        if (row < 0 || row > 8 || col < 0 || col > 8 || value < 1 || value > 9) {
                             throw new RuntimeException("Invalid row or column or value");
                         }
                         if (quiz.isFixed(row, col)) {
