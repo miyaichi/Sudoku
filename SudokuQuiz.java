@@ -276,7 +276,8 @@ public class SudokuQuiz {
         for (int row = 0; row < size * 3; row++) {
             for (int col = 0; col < size * 3; col++) {
                 if (board[row][col] == 0) {
-                    for (int value = 1; value <= 9; value++) {
+                    // To improve the quiz quality, randomize the order of numbers to be attempted.
+                    for (int value : shaffle(new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 })) {
                         if (isPossible(board, row, col, value)) {
                             board[row][col] = value;
                             if (solve(board)) {
@@ -290,6 +291,22 @@ public class SudokuQuiz {
             }
         }
         return true;
+    }
+
+    /**
+     * Shaffle the numbers. (Fisher-Yates shuffle)
+     * 
+     * @param numbers The array of numbers can be *changed*.
+     * @return The shuffled numbers.
+     */
+    private int[] shaffle(int[] numbers) {
+        for (int i = numbers.length - 1; i > 0; i--) {
+            int j = (int) (Math.random() * (i + 1));
+            int temp = numbers[i];
+            numbers[i] = numbers[j];
+            numbers[j] = temp;
+        }
+        return numbers;
     }
 
     /**
