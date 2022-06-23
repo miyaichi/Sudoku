@@ -225,19 +225,8 @@ public class SudokuQuiz {
      */
     public void newQuiz() {
         while (true) {
-            // Fill the upper left block with random numbers and backtrack to create a quiz.
+            // Create a quiz by backtracking.
             quiz = new int[size * 3][size * 3];
-            for (int row = 0; row < 3; row++) {
-                for (int col = 0; col < 3; col++) {
-                    while (true) {
-                        int value = (int) (Math.random() * 9 + 1);
-                        if (isPossible(quiz, row, col, value)) {
-                            quiz[row][col] = value;
-                            break;
-                        }
-                    }
-                }
-            }
             if (!solve(quiz)) {
                 continue;
             }
