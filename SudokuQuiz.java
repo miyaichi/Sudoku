@@ -98,10 +98,9 @@ public class SudokuQuiz {
      */
     public boolean setValue(int row, int col, int value) {
         if (!isFixed(row, col) && value >= 1 && value <= 9) {
-            boolean possible = isPossible(row, col, value);
             operations.add(new Operation(row, col, board[row][col], value));
             board[row][col] = value;
-            return possible;
+            return isPossible(row, col, value);
         }
         return false;
     }
@@ -160,7 +159,10 @@ public class SudokuQuiz {
     private boolean isPossible(int[][] board, int row, int col, int value) {
         if (!isFixed(row, col) && value >= 1 && value <= 9) {
             for (int i = 0; i < size * 3; i++) {
-                if (board[row][i] == value || board[i][col] == value) {
+                if (i != row && board[i][col] == value) {
+                    return false;
+                }
+                if (i != col && board[row][i] == value) {
                     return false;
                 }
             }
@@ -168,7 +170,7 @@ public class SudokuQuiz {
             int colStart = col / 3 * 3;
             for (int i = rowStart; i < rowStart + 3; i++) {
                 for (int j = colStart; j < colStart + 3; j++) {
-                    if (board[i][j] == value) {
+                    if (i != row && j != col && board[i][j] == value) {
                         return false;
                     }
                 }
