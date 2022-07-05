@@ -146,13 +146,14 @@ public class SudokuBoard {
                 for (int i = 1; i <= 9; i++) {
                     numbers[i - 1].setEnabled(reminings[i - 1] != 0);
                 }
+                repaintBoard();
             }
         });
         timer.start();
     }
 
     /**
-     * Set the board with the current quiz.
+     * Set the board with the current board.
      */
     private void setBoard() {
         for (int row = 0; row < cells.length; row++) {
@@ -164,13 +165,28 @@ public class SudokuBoard {
                     cell.setEnabled(false);
                     cell.setBackground(fixedCellColor);
                 } else {
-                    cell.setValue(value, validValueColor);
+                    cell.setValue(value, quiz.isPossible(row, col, value) ? validValueColor : invalidValueColor);
                     cell.setEnabled(true);
                     cell.setBackground(editableCellColor);
                 }
             }
         }
         selectedCell = null;
+    }
+
+    /**
+     * Repaint the board.
+     */
+    private void repaintBoard() {
+        for (int row = 0; row < cells.length; row++) {
+            for (int col = 0; col < cells[row].length; col++) {
+                Cell cell = cells[row][col];
+                int value = quiz.getValue(row, col);
+                if (!quiz.isFixed(row, col)) {
+                    cell.setValue(value, quiz.isPossible(row, col, value) ? validValueColor : invalidValueColor);
+                }
+            }
+        }
     }
 
     /**
