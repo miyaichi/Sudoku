@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.Semaphore;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,7 +23,7 @@ public class SudokuBoard {
     private Cell[][] cells; // Cells of the board.
     private Cell selectedCell = null; // Currently selected cell.
 
-    private boolean solving = false; // Only one can solve at a time.
+    private Semaphore semaphore = new Semaphore(1); // Only one can solve at a time.
 
     private final Color selectedCellColor = new Color(135, 206, 250); // Light skyblue
     private final Color fixedCellColor = new Color(149, 186, 238); // Blue onix
@@ -223,15 +224,14 @@ public class SudokuBoard {
      * Solves the quiz.
      */
     public void solveQuiz() {
-        if (!solving) { // Only one thread can solve at a time.
-            SudokuSolver solver = new SudokuSolver(quiz);
-            SudokuSolver.Hint[] hints = solver.getHints();
-
-            solving = true;
+        if (semaphore.tryAcquire()) // Only one thread can solve at a time.
+        {
             Thread thread = new Thread() {
                 @Override
                 public void run() {
-                    for (SudokuSolver.Hint hint : hints) {
+                    SudokuSolver solver = new SudokuSolver(quiz);
+
+                    for (SudokuSolver.Hint hint : solver.getHints()) {
                         if (quiz.isFixed(hint.row, hint.col) || !quiz.isPossible(hint.row, hint.col, hint.value)) {
                             break; // Someone changed the quiz.
                         }
@@ -257,7 +257,7 @@ public class SudokuBoard {
                             }
                         });
                     }
-                    solving = false;
+                    semaphore.release();
                 }
             };
             thread.start();
