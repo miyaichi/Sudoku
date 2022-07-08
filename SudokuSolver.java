@@ -104,21 +104,13 @@ class SudokuSolver {
      * @return candidates Candidates for the cell.
      */
     private int[] getCandidates(int row, int col) {
-        int count = 0;
-        for (int value = 1; value <= 9; value++) {
-            if (candidates[row][col][value - 1]) {
-                count++;
+        List<Integer> ca = new ArrayList<Integer>();
+        for (int i = 1; i <= size; i++) {
+            if (candidates[row][col][i - 1]) {
+                ca.add(i);
             }
         }
-
-        int[] ca = new int[count];
-        count = 0;
-        for (int value = 1; value <= 9; value++) {
-            if (candidates[row][col][value - 1]) {
-                ca[count++] = value;
-            }
-        }
-        return ca;
+        return ca.stream().mapToInt(i -> i).toArray();
     }
 
     /**
