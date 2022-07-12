@@ -105,17 +105,17 @@ class SudokuSolver {
      */
     private int[] getCandidates(int row, int col) {
         int counter = 0;
-        for (int i = 0; i < candidates[row][col].length; i++) {
-            if (candidates[row][col][i]) {
+        for (int value = 1; value <= 9; value++) {
+            if (candidates[row][col][value - 1]) {
                 counter++;
             }
         }
 
         int[] ca = new int[counter];
         counter = 0;
-        for (int i = 0; i < candidates[row][col].length; i++) {
-            if (candidates[row][col][i]) {
-                ca[counter++] = i + 1;
+        for (int value = 1; value <= 9; value++) {
+            if (candidates[row][col][value - 1]) {
+                ca[counter++] = value;
             }
         }
         return ca;
