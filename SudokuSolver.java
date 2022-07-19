@@ -241,8 +241,8 @@ class SudokuSolver {
     }
 
     /**
-     * Nacked Pairs, Triplets, Quads reduction.
-     * If the pairs, triples, and quads appear in the row, column, and block, it can
+     * Nacked Pairs, Triplets reduction.
+     * If the pairs and triples appear in the row, column, and block, it can
      * reduce candidates.
      * 
      * @return true if the candidate reduction is successful.
@@ -253,7 +253,7 @@ class SudokuSolver {
         for (int row = 0; row < size * 3; row++) {
             for (int col = 0; col < size * 3; col++) {
                 int[] ca = getCandidates(row, col);
-                if (ca.length >= 2 && ca.length <= 4) {
+                if (ca.length >= 2 && ca.length <= 3) {
                     int count;
 
                     count = ca.length - 1;

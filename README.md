@@ -82,9 +82,9 @@ It implemented the following solver strategies.
 
 - Nacked Pairs, Triplets, Quads reduction.
 
-  If the pairs, triples, and quads appear in the row, column, and block, it can reduce candidates.
+  If the pairs and triples appear in the row, column, and block, it can reduce candidates.
 
-  ペア、トリプル、クアッドが行、列、ブロックに出現していれば、候補を減らすことができる。
+  ペア、トリプルが行、列、ブロックに出現していれば、候補を減らすことができる。
 
 - Box/Line reduction.
 
