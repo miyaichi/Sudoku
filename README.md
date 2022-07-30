@@ -80,7 +80,7 @@ It implemented the following solver strategies.
 
   候補が行、列、ブロックに 1 回しか出現しない場合、候補を減らすことができる。
 
-- Nacked Pairs, Triplets, Quads reduction.
+- Nacked Pairs, Triplets reduction.
 
   If the pairs and triples appear in the row, column, and block, it can reduce candidates.
 
